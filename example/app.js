@@ -12,7 +12,6 @@ import './app.scss';
 Vue.use(VueWamp, {
     url: 'ws://demo.crossbar.io/ws',
     realm: 'realm1',
-    lazy_open: true,
     onopen: function(session, details) {
         console.log('WAMP connected', session, details);
     },
@@ -38,4 +37,3 @@ var app = new Vue({
         }
     }
 });
-
