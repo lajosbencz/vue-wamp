@@ -25,6 +25,9 @@
                                 <span v-if="$wampIsOpen">Open</span>
                                 <span v-else>Opening...</span>
                             </a>
+                            <a class="btn btn-warning" v-if="$wampIsRetrying">
+                                <span>Retrying...</span>
+                            </a>
                         </div>
                     </div>
                 </div>
