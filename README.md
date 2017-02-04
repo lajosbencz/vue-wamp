@@ -40,13 +40,13 @@ export default {
     },
     watch: {
         someValue(val, old) {
-            this.$wamp.publish('some-topic', [val, old]);
+            this.$wamp.publish('some-topic', [], {val, old});
         }
     },
     wamp: {
         subscribe: {
             'some-topic'(args, kwArgs, details) {
-                this.someValue = kwArgs.value;
+                this.someValue = kwArgs.val;
             },
             'another-topic': {
                 acknowledge: true,
