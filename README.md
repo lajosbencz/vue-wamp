@@ -1,9 +1,19 @@
 # vue-wamp
-AutobahnJS wrapper library fo Vue.js
+### Autobahn wrapper for Vue, served as a plugin 
+
+* Calls to _subscribe, register, publish, call, unsubscribe, unregister_ are deferred, so that they are executed as soon as the Session object of Autobahn is available
+* Automatic garbage collection for Registration and Subscription objects component-wise
+* Global, computed status variables
+* Plugin packaging
 
 ```
 npm install --save vue-wamp
-npm run example
+```
+
+## Example
+
+```
+cd node_modules/vue-wamp && npm run example
 ```
 
 You will need to run two browser tabs to see the effects of example 1&2 (or more testers).
