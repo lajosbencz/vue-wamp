@@ -1,0 +1,22 @@
+
+$icon-font-path: "/node_modules/bootstrap-sass/assets/fonts/bootstrap/";
+@import '../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap';
+
+[v-cloak] {
+  display: none;
+}
+
+.btn > .glyphicon {
+  top: 3px;
+}
+
+nav .navbar-controls {
+  margin-top: 8px;
+}
+
+nav .navbar-controls .btn-group:first-of-type .glyphicon {
+  top: 1px;
+}
+nav .navbar-controls .btn-group:first-of-type span {
+  text-transform: capitalize;
+}
