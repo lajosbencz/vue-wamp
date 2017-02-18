@@ -26,6 +26,7 @@ WAMP router by courtesy of https://demo.crossbar.io/ws, please obey [their rules
 import VueWamp from 'vue-wamp'
 
 Vue.use(VueWamp, {
+    debug: true,
     url: 'ws://demo.crossbar.io/ws',
     realm: 'realm1',
     onopen: function(session, details) {
@@ -50,7 +51,7 @@ export default {
     },
     watch: {
         someValue(val, old) {
-            this.$wamp.publish('some-topic', [], {val, old});
+            this.$wampPublish('some-topic', [], {val, old});
         }
     },
     wamp: {
