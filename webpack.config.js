@@ -35,7 +35,7 @@ const config = {
                 test: /\.s[ac]ss$/,
                 use: extractCSS.extract({
                     fallback: 'style-loader',
-                    user: 'css-loader!sass-loader'
+                    use: 'css-loader!sass-loader'
                 })
             },
             {
