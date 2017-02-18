@@ -6,11 +6,7 @@
   "main": "lib/vue-wamp.js",
   "scripts": {
     "example": "cross-env NODE_ENV=development webpack-dev-server",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "bump:major": "npm version major",
-    "bump:minor": "npm version minor",
-    "bump:patch": "npm version patch",
-    "bump": "npm run bump:patch"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
