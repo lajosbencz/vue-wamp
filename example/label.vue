@@ -42,14 +42,8 @@
                 }
             };
         },
-        /*
-        wamp: {
-            subscribe, register
-        },
-        */
         mounted() {
-            console.log('wut');
-            this.$wampSubscribe(topic, subscribe[topic]).then(console.log, console.error);
+            this.$wampSubscribe(topic, subscribe[topic]);
         }
     }
 

@@ -10,13 +10,14 @@ import AppSize from './size.vue'
 import './app.scss';
 
 Vue.use(VueWamp, {
+    debug: true,
     url: 'ws://demo.crossbar.io/ws',
     realm: 'realm1',
     onopen: function(session, details) {
-        console.log('WAMP connected', session, details);
+        console.debug('WAMP connected', session, details);
     },
     onclose: function(reason, details) {
-        console.log('WAMP closed: ' + reason, details);
+        console.debug('WAMP closed: ' + reason, details);
     }
 });
 
