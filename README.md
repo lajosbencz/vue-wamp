@@ -43,7 +43,7 @@ Vue.use(VueWamp, {
 
 ## Usage
 
-```js
+```vue
 // component.vue
 <template>
     <div>
