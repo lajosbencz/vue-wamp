@@ -2,9 +2,12 @@
 ### Autobahn wrapper for Vue, served as a plugin 
 
 * Calls to _subscribe, register, publish, call, unsubscribe, unregister_ are deferred, so that they are executed as soon as the Session object of Autobahn is available
-* Automatic garbage collection for Registration and Subscription objects component-wise
-* Global, computed status variables
-* Plugin packaging
+* [Plugin packaging](#configuration)
+* [Global, computed status variables](#global-status)
+* [Global, static methods](#static-methods)
+* [Vue prototype methods](#prototype-methods)
+* [Vue mixin methods](#mixin-methods)
+* Automatic garbage collection for Registration and Subscription objects component-wise when used with ```this.$wampSubscribe``` and ```this.$wampRegister``` (acknowledge options is forced)
 
 ```
 npm install --save vue-wamp
@@ -38,10 +41,15 @@ Vue.use(VueWamp, {
 });
 ```
 
-### Usage
+## Usage
 
 ```js
 // component.vue
+<template>
+    <div>
+        <p>Connected: {{ $wampIsConnected }}</p>
+    </div>
+</template>
 <script>
 export default {
     data() {
@@ -82,7 +90,9 @@ export default {
 </script>
 ```
 
-### Global status
+## Global status
+
+```this.$wampIsConnected```, ```this.$wampIsOpen```, ```this.$wampIsRetrying```
 
 ```html
 <div class="btn-group btn-group-sm">
@@ -98,4 +108,55 @@ export default {
         <span>Retrying...</span>
     </a>
 </div>
+```
+
+## Static methods
+
+```Vue.Wamp.subscribe```, ```Vue.Wamp.publish```, ```Vue.Wamp.register```, ```Vue.Wamp.call```, ```Vue.Wamp.unsubscribe```, ```Vue.Wamp.unregister```
+
+```js
+// main.js
+Vue.Wamp.subscribe('some-topic', function(args, kwArgs, details) {
+        // context is empty
+    }, {
+    acknowledge: true // option needed for promise
+}).then(function(s) {
+    console.log('AutobahnJS Subscription object: ', s); 
+});
+```
+
+## Prototype methods
+
+```this.$wamp.subscribe```, ```this.$wamp.publish```, ```this.$wamp.register```, ```this.$wamp.call```, ```this.$wamp.unsubscribe```, ```this.$wamp.unregister```
+
+```js
+export default {
+    mounted() {
+        this.$wamp.subscribe('some-topic', function(args, kwArgs, details) {
+            // context is still empty
+        }, {
+            acknowledge: true // option needed for promise
+        }).then(function(s) {
+            console.log('AutobahnJS Subscription object: ', s); 
+        });
+    }
+}
+```
+
+## Mixin methods
+
+```this.$wampSubscribe```, ```this.$wampPublish```, ```this.$wampRegister```, ```this.$wampCall```, ```this.$wampUnsubscribe```, ```this.$wampUnregister```
+
+```js
+export default {
+    mounted() {
+        this.$wampSubscribe('some-topic', function(args, kwArgs, details) {
+            // context is VueComponent, Subscription will be unsubscribed if component is destroyed
+        }, {
+            // acknowledge: true // option not needed anymore, it's forced
+        }).then(function(s) {
+            console.log('AutobahnJS Subscription object: ', s); 
+        });
+    }
+}
 ```
