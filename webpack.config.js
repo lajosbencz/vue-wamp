@@ -9,7 +9,8 @@ const extractCSS = new ExtractTextPlugin('[name].css');
 const config = {
     entry: {
         vendor: ['jquery', 'bootstrap'],
-        example: './example/app.js'
+        client: './example/client.js',
+        server: './example/server.js'
     },
     output: {
         path: path.resolve(__dirname, 'example', 'dist'),
