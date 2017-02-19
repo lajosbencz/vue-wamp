@@ -1,25 +1,24 @@
 
 import 'jquery';
-//import uniqid from 'uniqid';
+import { options, TOP_1, TOP_2, RPC_1, RPC_2 } from './config'
 import Vue from 'vue'
 import VueWamp from '../lib/vue-wamp.js'
 import AppMessage from './message.vue'
 import AppLabel from './label.vue'
 import AppSize from './size.vue'
+import abServer from './server'
+abServer.open();
 
 import './app.scss';
 
-Vue.use(VueWamp, {
-    debug: true,
-    url: 'ws://demo.crossbar.io/ws',
-    realm: 'realm1',
-    onopen: function(session, details) {
-        console.debug('WAMP connected', session, details);
+Vue.use(VueWamp, options({
+    onopen(session, details) {
+        console.log('WAMP client connected', session, details);
     },
-    onclose: function(reason, details) {
-        console.debug('WAMP closed: ' + reason, details);
+    onclose(reason, details) {
+        console.log('WAMP client closed: ' + reason, details);
     }
-});
+}));
 
 Vue.component('app-message', AppMessage);
 Vue.component('app-label', AppLabel);

@@ -74,7 +74,8 @@ const config = {
         compress: false,
         inline: true,
         hot: true
-    }
+    },
+    devtool: 'source-map'
 };
 
 module.exports = config;
