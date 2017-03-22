@@ -1,6 +1,8 @@
 # vue-wamp
 ### Autobahn wrapper for Vue, served as a plugin 
 
+__This release only supports VueJS 2, I have no plan to create a VueJS 1 compatible branch, but pull requests are always welcome!__
+
 * Calls to _subscribe, register, publish, call, unsubscribe, unregister_ are deferred, so that they are executed as soon as the Session object of Autobahn is available
 * Automatic garbage collection for Registration and Subscription objects component-wise
 * Global, computed status variables
