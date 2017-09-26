@@ -4,9 +4,6 @@ import { options, TOP_1, TOP_2, RPC_1, RPC_2 } from './config'
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 import VueWamp from '../lib/vue-wamp.js'
-import ComMessage from './components/message.vue'
-import ComLabel from './components/label.vue'
-import ComSize from './components/size.vue'
 
 import './app.scss';
 
@@ -30,4 +27,4 @@ Vue.use(VueWamp, options({
 }));
 
 export default Vue
-export { Vue, ComLabel, ComMessage, ComSize, TOP_1, TOP_2, RPC_1, RPC_2 }
+export { Vue, TOP_1, TOP_2, RPC_1, RPC_2 }

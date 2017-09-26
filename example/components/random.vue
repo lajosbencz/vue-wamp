@@ -1,16 +1,15 @@
-
 <template>
     <div class="component-random">
         <div class="row">
             <span class="col-xs-8">Length</span>
             <div class="col-xs-4 text">
-                <input class="form-control" :mode.number="input.length" :value="input.length" type="number" min="1" max="1024" />
+                <input class="form-control" v-model.number="input.length" type="number" min="1" max="1024"/>
             </div>
         </div>
         <div class="row">
             <span class="col-xs-8">Type</span>
             <div class="col-xs-4">
-                <select class="form-control" :model="input.type" :value="input.type">
+                <select class="form-control" v-model="input.type">
                     <option v-for="type in types">{{ type }}</option>
                 </select>
             </div>
@@ -18,7 +17,7 @@
         <div class="row">
             <span class="col-xs-8">Size</span>
             <div class="col-xs-4">
-                <input class="form-control" :model.number="input.size" :value="input.size" type="number" min="1" max="1024" />
+                <input class="form-control" v-model.number="input.size" type="number" min="1" max="1024"/>
             </div>
         </div>
         <div class="row">
@@ -41,49 +40,82 @@
 <style>
     .component-random {
     }
+
     .component-random button {
         text-align: center;
     }
+
     .component-random .result-value {
         font-family: "Lucida Console", Monaco, monospace;
         padding: 1px 2px;
     }
+
     .component-random .result-value > .label {
         padding: 4px 6px;
     }
 </style>
 
 <script>
-    import { RPC_1 } from '../common.js'
-    export default {
-        data() {
-            return {
-                types: ['uint8', 'uint16', 'hex16'],
-                working: false,
-                values: [],
-                input: {
-                    size: 12,
-                    type: 'hex16',
-                    length: 12
-                }
-            }
-        },
-        methods: {
-            generate() {
-                let self = this;
-                this.working = true;
-                this.$wamp.call(RPC_1, [], this.input).then(
-                        function(r) {
-                            self.working = false;
-                            self.values = r;
-                        },
-                        function(e) {
-                            self.working = false;
-                            self.values = [];
-                            console.error(e);
-                        }
-                );
-            }
-        }
+
+  function rnd(length, chars) {
+    if(!chars) {
+      chars = 'aA#!';
     }
+    let mask = '';
+    if (chars.indexOf('a') > -1) mask += 'abcdefghijklmnopqrstuvwxyz';
+    if (chars.indexOf('A') > -1) mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (chars.indexOf('#') > -1) mask += '0123456789';
+    if (chars.indexOf('!') > -1) mask += '~`!@#$%^&*()_+-={}[]:";\'<>?,./|\\';
+    let result = '';
+    for (let i = length; i > 0; --i) result += mask[Math.floor(Math.random() * mask.length)];
+    return result;
+  }
+
+  import {RPC_1} from '../common.js'
+
+  export default {
+    data() {
+      return {
+        types: ['uint8', 'uint16', 'hex16'],
+        working: false,
+        values: [],
+        input: {
+          size: 1,
+          type: 'hex16',
+          length: 3
+        }
+      }
+    },
+    methods: {
+      generate() {
+        let self = this;
+        this.working = true;
+        this.$wamp.call('vue-wamp-random', [], this.input).then(
+          function (r) {
+            self.working = false;
+            self.values = r;
+          },
+          function (e) {
+            self.working = false;
+            self.values = [];
+            console.error(e);
+          }
+        );
+      }
+    },
+    wamp: {
+      register: {
+        'vue-wamp-random': {
+          function(args, kwArgs, details) {
+            let r = [];
+            for(let x=0; x<kwArgs.size; x++) {
+              r.push(rnd(kwArgs.length));
+            }
+            return r;
+          },
+          persist: true,
+        }
+      }
+    }
+  }
 </script>

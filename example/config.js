@@ -1,8 +1,8 @@
 
-const TOP_1 = 'vue.wamp.some-topic';
-const TOP_2 = 'vue.wamp.another-topic';
-const RPC_1 = 'vue.wamp.some-procedure';
-const RPC_2 = 'vue.wamp.another-procedure';
+const TOP_1 = 'vue-wamp-some-topic';
+const TOP_2 = 'vue-wamp-another-topic';
+const RPC_1 = 'vue-wamp-some-procedure';
+const RPC_2 = 'vue-wamp-another-procedure';
 
 const options = (o) => {
   return Object.assign({
