@@ -13,8 +13,14 @@ import './app.scss';
 Vue.use(VueResource);
 
 Vue.use(VueWamp, options({
-  debug: false,
+  url: 'ws://localhost:8080/ws',
+  debug: true,
   lazy_open: false,
+  max_retries: 15,
+  initial_retry_delay: 1.5,
+  max_retry_delay: 300,
+  retry_delay_growth: 1.5,
+  retry_delay_jitter: 0.1,
   onopen(session, details) {
     console.log('WAMP client connected', session, details);
   },
