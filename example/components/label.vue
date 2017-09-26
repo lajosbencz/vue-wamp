@@ -43,7 +43,7 @@
             };
         },
         mounted() {
-            this.$wampSubscribe(topic, subscribe[topic]);
+            this.$wamp.subscribe(topic, subscribe[topic]);
         }
     }
 

@@ -52,9 +52,9 @@
 
     export default {
         mounted() {
-            var self = this;
+            let self = this;
             calc = _.debounce(function(width, height) {
-                self.$wampCall(topic, [width, height]).then(
+                self.$wamp.call(topic, [width, height]).then(
                         function(r) {
                             self.display.width = r[1];
                             self.display.height = r[2];

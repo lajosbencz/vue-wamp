@@ -1,4 +1,3 @@
-
 <template>
     <div>
         <nav class="navbar navbar-default">
@@ -26,48 +25,78 @@
 </template>
 
 <script>
-    import deferred from 'deferred'
-    import { RPC_1, RPC_2 } from './config.js'
-    export default {
-        data() {
-            return {
-                logString: ''
-            }
-        },
-        methods: {
-            log(format) {
-                let args = [];
-                for(let i in arguments) {
-                    if(arguments.hasOwnProperty(i)) {
-                        const a = arguments[i];
-                        args.push((typeof a == 'object') ? JSON.stringify(a, null, 2) : a + '');
-                    }
-                }
-                this.logString+= args.join(', ') + "\r\n";
-            }
-        },
-        mounted() {
-            const self = this;
-            this.log('Server mounted');
-            this.$wampRegister(RPC_1, function(args, kwArgs, details) {
-                self.log('Calling: ' + RPC_1, {args, kwArgs, details});
-                kwArgs = Object.assign({ length: 10, type: 'hex1', size: 2 }, kwArgs);
-                let defer = deferred();
-                let url = 'https://qrng.anu.edu.au/API/jsonI.php';
-                this.$http.get(url, { params: kwArgs }).then(
-                        function(r) {
-                            //this.log('Random API response: ', r);
-                            if(r.body.success) {
-                                self.log('Resolved: ' + RPC_1, {args, kwArgs, r});
-                                defer.resolve(r.body.data);
-                            } else {
-                                self.log('Failed: ' + RPC_1, {args, kwArgs, r});
-                                defer.reject(url + ' responded with: ' + r.statusText);
-                            }
-                        }
-                );
-                return defer.promise;
-            }, { acknowledge: true, invoke: 'roundrobin' });
+  import deferred from 'deferred'
+  import {RPC_1, RPC_2} from './config.js'
+
+  export default {
+    data() {
+      return {
+        logString: ''
+      }
+    },
+    methods: {
+      log(format) {
+        let args = [];
+        for (let i in arguments) {
+          if (arguments.hasOwnProperty(i)) {
+            const a = arguments[i];
+            args.push((typeof a === 'object') ? JSON.stringify(a, null, 2) : a + '');
+          }
         }
+        this.logString += args.join(', ') + "\r\n";
+      }
+    },
+    wamp: {
+      register: {
+        [RPC_1]: {
+          invoke: 'roundrobin',
+          persist: true,
+          function (args, kwArgs, details) {
+            this.log('Calling: ' + RPC_1, {args, kwArgs, details});
+            kwArgs = Object.assign({length: 10, type: 'hex1', size: 2}, kwArgs);
+            let defer = deferred();
+            let url = 'https://qrng.anu.edu.au/API/jsonI.php';
+            this.$http.get(url, {params: kwArgs}).then(
+              function (r) {
+                //this.log('Random API response: ', r);
+                if (r.body.success) {
+                  self.log('Resolved: ' + RPC_1, {args, kwArgs, r});
+                  defer.resolve(r.body.data);
+                } else {
+                  self.log('Failed: ' + RPC_1, {args, kwArgs, r});
+                  defer.reject(url + ' responded with: ' + r.statusText);
+                }
+              }
+            );
+            return defer.promise;
+          }
+        }
+      },
+    },
+    mounted() {
+      /*
+        const self = this;
+        this.log('Server mounted');
+        this.$wamp.register(RPC_1, function(args, kwArgs, details) {
+            self.log('Calling: ' + RPC_1, {args, kwArgs, details});
+            kwArgs = Object.assign({ length: 10, type: 'hex1', size: 2 }, kwArgs);
+            let defer = deferred();
+            let url = 'https://qrng.anu.edu.au/API/jsonI.php';
+            this.$http.get(url, { params: kwArgs }).then(
+                    function(r) {
+                        //this.log('Random API response: ', r);
+                        if(r.body.success) {
+                            self.log('Resolved: ' + RPC_1, {args, kwArgs, r});
+                            defer.resolve(r.body.data);
+                        } else {
+                            self.log('Failed: ' + RPC_1, {args, kwArgs, r});
+                            defer.reject(url + ' responded with: ' + r.statusText);
+                        }
+                    }
+            );
+            return defer.promise;
+        }, { acknowledge: true, invoke: 'roundrobin' });
+        */
     }
+  }
 </script>

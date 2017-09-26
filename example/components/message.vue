@@ -45,7 +45,7 @@
         },
         watch: {
             'input.message': function(value, old) {
-                this.$wampPublish(topic, [value]);
+                this.$wamp.publish(topic, [value]);
             }
         }
     }
