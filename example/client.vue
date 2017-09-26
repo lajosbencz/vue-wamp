@@ -1,11 +1,11 @@
-
 <template>
     <div>
         <nav class="navbar navbar-default">
             <div class="btn-toolbar navbar-controls">
                 <div class="btn-group btn-group-sm">
                     <a class="btn btn-default" v-for="(t, i) in show" @click="show[i] = !t">
-                        <i class="glyphicon" :class="{'glyphicon-ok text-success':t, 'glyphicon-remove text-danger':!t}"></i>
+                        <i class="glyphicon"
+                           :class="{'glyphicon-ok text-success':t, 'glyphicon-remove text-danger':!t}"></i>
                         <span>{{ i }}</span>
                     </a>
                 </div>
@@ -26,20 +26,36 @@
             </div>
         </nav>
 
-        <h2>Random</h2>
-        <com-random />
+        <div v-for="(e, k) in show" :key="k" v-if="show[k]">
+            <h2>{{ k }}</h2>
+            <component :is="'com-'+k"></component>
+        </div>
 
     </div>
 </template>
 
 <script>
-    import ComRandom from './components/random.vue'
-    export default {
-        components: { ComRandom },
-        data() {
-            return {
-                show: []
-            }
+  import ComLabel from './components/label.vue'
+  import ComMessage from './components/message.vue'
+  import ComRandom from './components/random.vue'
+  import ComSize from './components/size.vue'
+
+  export default {
+    components: {ComLabel,ComMessage,ComRandom,ComSize},
+    data() {
+      return {
+        show: {
+          label: true,
+          random: true,
+          message: true,
+          size: true,
         }
+      }
+    },
+    mounted() {
+      this.$wamp.subscribe('foobar', (r) => {
+        console.log(r);
+      }, {});
     }
+  }
 </script>
