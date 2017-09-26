@@ -7,7 +7,7 @@
             <div class="input-group input-group-sm">
                 <input type="text" class="form-control" id="inp_message" placeholder="Message" v-model="input.message" />
                 <div class="input-group-btn">
-                    <button @click="$wampPublish('vue-wamp-message',[input.message])" class="btn btn-success">Send</button>
+                    <button @click="$wamp.publish('vue-wamp-message',[input.message])" class="btn btn-success">Send</button>
                 </div>
             </div>
         </div>

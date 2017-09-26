@@ -6,10 +6,10 @@
         <div class="col-md-6">
             <div class="btn-toolbar">
                 <div class="btn-group">
-                    <a class="btn btn-default" v-for="i in items" :class="{'btn-primary': i == display.label}" @click="$wampPublish('vue-wamp-label',[i])">{{ i }}</a>
+                    <a class="btn btn-default" v-for="i in items" :class="{'btn-primary': i == display.label}" @click="$wamp.publish('vue-wamp-label',[i])">{{ i }}</a>
                 </div>
                 <div class="btn-group">
-                    <a class="btn btn-danger" @click="$wampPublish('vue-wamp-label',[''])"><i class="glyphicon glyphicon-remove"></i></a>
+                    <a class="btn btn-danger" @click="$wamp.publish('vue-wamp-label',[''])"><i class="glyphicon glyphicon-remove"></i></a>
                 </div>
             </div>
         </div>
