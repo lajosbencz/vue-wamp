@@ -53,9 +53,6 @@
       }
     },
     mounted() {
-      this.$wamp.subscribe('foobar', (r) => {
-        console.log(r);
-      }, {});
     }
   }
 </script>
