@@ -3,13 +3,18 @@
 
 __This release only supports VueJS 2, I have no plan to create a VueJS 1 compatible branch, but pull requests are always welcome!__
 
+Since v0.0.1:
 * Calls to _subscribe, register, publish, call, unsubscribe, unregister_ are deferred, so that they are executed as soon as the Session object of Autobahn is available
 * [Plugin packaging](#configuration)
 * [Global, computed status variables](#global-status)
 * [Global, static methods](#static-methods)
 * [Vue prototype methods](#prototype-methods)
-* [Vue mixin methods](#mixin-methods)
-* Automatic garbage collection for Registration and Subscription objects component-wise when used with ```this.$wampSubscribe``` and ```this.$wampRegister``` (acknowledge options is forced)
+* Automatic garbage collection for Registration and Subscription objects component-wise when used through option (acknowledge option is forced)
+
+Since v1.3.0:
+* Automatic re-subscribe/register if the connection was lost then re-established
+
+## Installation
 
 ```
 npm install --save vue-wamp
@@ -18,11 +23,14 @@ npm install --save vue-wamp
 ## Example
 
 ```
-cd node_modules/vue-wamp && npm run example
+cd node_modules/vue-wamp
+npm run example
 ```
 
 You will need to run two browser tabs to see the effects of example 1&2 (or more testers).
 WAMP router by courtesy of https://demo.crossbar.io/ws, please obey [their rules](http://crossbar.io/docs/Demo-Instance/) .
+
+Lately the demo router was unavailable, so i changed to config to connect to a local crossbar server instead.
 
 ## Configuration
 
@@ -61,7 +69,7 @@ export default {
     },
     watch: {
         someValue(val, old) {
-            this.$wampPublish('some-topic', [], {val, old});
+            this.$wamp.publish('some-topic', [], {val, old});
         }
     },
     wamp: {
@@ -120,6 +128,7 @@ export default {
 // main.js
 Vue.Wamp.subscribe('some-topic', function(args, kwArgs, details) {
         // context is empty
+        console.log(this); // = null
     }, {
     acknowledge: true // option needed for promise
 }).then(function(s) {
@@ -133,11 +142,17 @@ Vue.Wamp.subscribe('some-topic', function(args, kwArgs, details) {
 
 ```js
 export default {
+    data() {
+      return {
+        foo: 'bar',
+      };
+    },
     mounted() {
         this.$wamp.subscribe('some-topic', function(args, kwArgs, details) {
-            // context is still empty
+            // component context is available
+            return this.foo;
         }, {
-            acknowledge: true // option needed for promise
+            acknowledge: true // option needed for promise, automatically added
         }).then(function(s) {
             console.log('AutobahnJS Subscription object: ', s); 
         });
@@ -146,6 +161,8 @@ export default {
 ```
 
 ## Mixin methods
+
+!**Deprecated since 1.3.0**!
 
 ```this.$wampSubscribe```, ```this.$wampPublish```, ```this.$wampRegister```, ```this.$wampCall```, ```this.$wampUnsubscribe```, ```this.$wampUnregister```
 
