@@ -1,7 +1,8 @@
+
+!**/.gitkeep
+
 /.idea/
 /node_modules/
 /example/dist/*
 /example/.crossbar/key.*
 /example/.crossbar/*.pid
-
-!**/.gitkeep
