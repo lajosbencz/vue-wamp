@@ -7,7 +7,7 @@ const RPC_2 = 'vue-wamp-another-procedure';
 const options = (o) => {
   return Object.assign({
     debug: false,
-    url: 'ws://demo.crossbar.io/ws',
+    url: 'wss://demo.crossbar.io/ws',
     realm: 'realm1'
   }, o);
 };

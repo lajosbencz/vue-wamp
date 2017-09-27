@@ -6,7 +6,6 @@ __This release only supports VueJS 2, I have no plan to create a VueJS 1 compati
 Since v0.0.1:
 * Calls to _subscribe, register, publish, call, unsubscribe, unregister_ are deferred, so that they are executed as soon as the Session object of Autobahn is available
 * [Plugin packaging](#configuration)
-* [Global, computed status variables](#global-status)
 * [Global, static methods](#static-methods)
 * [Vue prototype methods](#prototype-methods)
 * Automatic garbage collection for Registration and Subscription objects component-wise when used through option (acknowledge option is forced)
@@ -57,7 +56,7 @@ Vue.use(VueWamp, {
 // component.vue
 <template>
     <div>
-        <p>Connected: {{ $wampIsConnected }}</p>
+        <p>Connected: {{ $wamp.isConnected }}</p>
     </div>
 </template>
 <script>
@@ -98,26 +97,6 @@ export default {
     }
 }
 </script>
-```
-
-## Global status
-
-```this.$wampIsConnected```, ```this.$wampIsOpen```, ```this.$wampIsRetrying```
-
-```html
-<div class="btn-group btn-group-sm">
-    <a class="btn btn-default" :class="{'btn-success':$wampIsConnected}">
-        <span v-if="$wampIsConnected">Connected</span>
-        <span v-else>Connecting...</span>
-    </a>
-    <a class="btn btn-default" :class="{'btn-success':$wampIsOpen}">
-        <span v-if="$wampIsOpen">Open</span>
-        <span v-else>Opening...</span>
-    </a>
-    <a class="btn btn-warning" v-if="$wampIsRetrying">
-        <span>Retrying...</span>
-    </a>
-</div>
 ```
 
 ## Static methods
