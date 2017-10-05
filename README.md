@@ -55,9 +55,7 @@ Vue.use(VueWamp, {
 ```vue
 // component.vue
 <template>
-    <div>
-        <p>Connected: {{ $wamp.isConnected }}</p>
-    </div>
+    <div></div>
 </template>
 <script>
 export default {
