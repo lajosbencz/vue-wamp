@@ -1,36 +1,34 @@
 <template>
-    <div class="component-random">
+    <div class="component-calc">
         <div class="row">
-            <span class="col-xs-8">Length</span>
+            <span class="col-xs-8">A</span>
             <div class="col-xs-4 text">
-                <input class="form-control" v-model.number="input.length" type="number" min="1" max="1024"/>
+                <input class="form-control" v-model.number="input.a" type="number" />
             </div>
         </div>
         <div class="row">
-            <span class="col-xs-8">Count</span>
+            <span class="col-xs-8">B</span>
             <div class="col-xs-4">
-                <input class="form-control" v-model.number="input.count" type="number" min="1" max="1024"/>
+                <input class="form-control" v-model.number="input.b" type="number" />
             </div>
         </div>
         <div class="row">
-            <span class="col-xs-8">Type</span>
+            <span class="col-xs-8">Operation</span>
             <div class="col-xs-4">
-                <select class="form-control" v-model="input.type">
-                    <option v-for="(name, type) in types" :value="type">{{ name }}</option>
+                <select class="form-control" v-model="input.op">
+                    <option v-for="type in types">{{ type }}</option>
                 </select>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-8">
-                <div class="pull-left result-value" v-for="v in values">
-                    <span class="label label-primary">{{ v }}</span>
-                </div>
-                <div class="clearfix"></div>
+                <span v-if="!isNaN(result)" class="label label-primary">{{ result }}</span>
+                <span v-if="isNaN(result)" class="label label-warning">NaN</span>
             </div>
             <div class="col-xs-4">
                 <button @click="generate" class="form-control btn btn-default" :disabled="working">
                     <span v-if="working"><i class="glyphicon glyphicon-repeat normal-right-spinner"></i></span>
-                    <span v-else>Generate</span>
+                    <span v-else>Calculate</span>
                 </button>
             </div>
         </div>
@@ -57,39 +55,33 @@
 
 <script>
 
-  import {RPC_RANDOM} from '../common.js'
+  import {RPC_CALC} from '../common.js'
 
   export default {
     data() {
       return {
-        types: {
-          'aA': 'Alpha',
-          'a': 'Alpha Lowercase',
-          'A': 'Alpha Uppercase',
-          'aA#': 'Alpha Numeric',
-          '#': 'Numeric',
-          'aA#!': 'Special Characters',
-        },
+        types: ['+', '-', '*', '/'],
         working: false,
-        values: [],
+        result: NaN,
         input: {
-          length: 12,
-          count: 3,
-          type: 'aA#',
+          a: 2,
+          b: 5,
+          op: '+'
         }
       }
     },
     methods: {
       generate() {
+        let self = this;
         this.working = true;
-        this.$wamp.call(RPC_RANDOM, [], this.input).then(
-          r => {
-            this.working = false;
-            this.values = r;
+        this.$wamp.call(RPC_CALC, [], this.input).then(
+          function (r) {
+            self.working = false;
+            self.result = r;
           },
-          e => {
-            this.working = false;
-            this.values = [];
+          function (e) {
+            self.working = false;
+            self.result = NaN;
             console.error(e);
           }
         );

@@ -10,17 +10,6 @@
                     </a>
                 </div>
                 <div class="btn-group btn-group-sm pull-right">
-                    <a class="btn btn-default" :class="{'btn-success':$wampIsConnected}">
-                        <span v-if="$wampIsConnected">Connected</span>
-                        <span v-else>Connecting...</span>
-                    </a>
-                    <a class="btn btn-default" :class="{'btn-success':$wampIsOpen}">
-                        <span v-if="$wampIsOpen">Open</span>
-                        <span v-else>Opening...</span>
-                    </a>
-                    <a class="btn btn-warning" v-if="$wampIsRetrying">
-                        <span>Retrying...</span>
-                    </a>
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -35,20 +24,18 @@
 </template>
 
 <script>
-  import ComLabel from './components/label.vue'
   import ComMessage from './components/message.vue'
   import ComRandom from './components/random.vue'
-  import ComSize from './components/size.vue'
+  import ComCalc from './components/calc.vue'
 
   export default {
-    components: {ComLabel,ComMessage,ComRandom,ComSize},
+    components: {ComMessage,ComRandom,ComCalc},
     data() {
       return {
         show: {
-          label: true,
           random: true,
+          calc: true,
           message: true,
-          size: true,
         }
       }
     },
