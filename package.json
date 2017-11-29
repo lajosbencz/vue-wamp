@@ -1,6 +1,6 @@
 {
   "name": "vue-wamp",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "AutobahnJS wrapper library fo Vue.js",
   "private": false,
   "main": "lib/vue-wamp.js",
