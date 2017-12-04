@@ -56,9 +56,12 @@ const config = {
             jQuery: 'jquery',
             jquery: 'jquery'
         }),
+      /*
         new webpack.optimize.CommonsChunkPlugin({
-            names: ['vendor', 'manifest']
+            names: ['vendor', 'manifest'],
+            minChunks: 2,
         }),
+        */
         //new webpack.optimize.UglifyJsPlugin(),
         new HtmlWebpackPlugin({template: './example/index.html'}),
         extractCSS
