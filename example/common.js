@@ -10,6 +10,7 @@ import './app.scss';
 Vue.use(VueResource);
 
 Vue.use(VueWamp, options({
+  url: 'ws://localhost:9001/ws',
   onopen(session, details) {
     console.log('WAMP client connected', session, details);
   },
