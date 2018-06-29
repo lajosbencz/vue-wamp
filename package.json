@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/lajosbencz/vue-wamp#readme",
   "dependencies": {
-    "autobahn": "^17.5.2",
+    "autobahn-browser": "^18.3.2",
     "deferred": "^0.7.5"
   },
   "devDependencies": {
