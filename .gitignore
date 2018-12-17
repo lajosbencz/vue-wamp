@@ -6,3 +6,5 @@
 /example/dist/*
 /example/.crossbar/key.*
 /example/.crossbar/*.pid
+
+package-lock.json
