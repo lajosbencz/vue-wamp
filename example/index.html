@@ -1,19 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>vue-wamp example</title>
-    </head>
-    <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <div id="app-client"></div>
+<head>
+    <meta charset="UTF-8">
+    <title>vue-wamp example</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.min.css" integrity="sha256-2pUeJf+y0ltRPSbKOeJh09ipQFYxUdct5nTY6GAXswA=" crossorigin="anonymous">
+    <style>
+        [v-cloak] > * {
+            display: none;
+        }
+        [v-cloak]::before {
+            content: "Loading..."
+        }
+    </style>
+</head>
+<body>
+<div id="app"
+     class="container"
+     v-cloak>
+    <section class="hero is-light">
+        <div class="hero-body">
+            <div class="notification is-pulled-right"
+                 :class="{'is-success':connected, 'is-danger':!connected}">
+                <span v-if="connected">
+                    &check;
+                    CONNECTED
+                </span>
+                <span v-else>
+                    &times;
+                    DISCONNECTED
+                </span>
             </div>
-            <div class="col-md-6">
-                <div id="app-server"></div>
+            <div class="container">
+                <h1 class="title">
+                    {{ title }}
+                </h1>
+                <h2 class="subtitle">
+                    v{{ $wamp.version }}
+                </h2>
             </div>
         </div>
-    </div>
-    </body>
+    </section>
+
+    <section class="container">
+        <div class="columns">
+            <div class="column">
+                <span class="is-light">
+                    {{ time }}
+                </span>
+            </div>
+            <div class="column">
+                Second column
+            </div>
+            <div class="column">
+                Third column
+            </div>
+            <div class="column">
+                Fourth column
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/autobahn-js-built@0.11.1/autobahn.min.js" integrity="sha256-3TKjZRGVl5JD8PzY9Zea2pVWKeA32IqWwIPKVf9G/UA=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="../dist/vue-wamp.js"></script>
+<script>
+    Vue.use(VueWamp, {
+      url: 'ws://ubuntu16:9001',
+      realm: 'realm1',
+      lazy_open: true,
+      debug: true,
+    });
+
+    new Vue({
+      el: '#app',
+      data: function() {
+        return {
+          title: 'VueWampExampleApp',
+          connected: false,
+          time: '',
+        };
+      },
+      mounted() {
+        this.$wamp.call('com.proc1').then(console.log).catch(console.error);
+        this.$wamp.subscribe('com.time', (args, kvArgs) => {
+          this.time = kvArgs.now;
+        });
+      },
+    });
+</script>
+</body>
 </html>
