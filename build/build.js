@@ -63,5 +63,14 @@ rollup.rollup({
     });
     return bundle
   })
+  .then(bundle => {
+    bundle.write({
+      file: pkg.main,
+      format: 'cjs',
+      sourcemap: true,
+      sourcemapFile: pkg.main + '.map'
+    });
+    return bundle
+  })
   .catch(console.error)
 ;

@@ -13,7 +13,10 @@ export default (Vue, options) => {
   Object.defineProperties(Vue.prototype, {
     '$wamp': {
       get() {
-        return C;
+        if(!this._vueWampWithContext) {
+          this._vueWampWithContext = C.withContext(this);
+        }
+        return this._vueWampWithContext;
       }
     }
   });
@@ -82,7 +85,7 @@ export default (Vue, options) => {
           }
 
           // do it!
-          C[type](name, handler.bind(this), options)
+          this.$wamp[type](name, handler.bind(this), options)
             .then(r => C.log.info('Component option: ' + type + ' ' + name, r))
             .catch(C.log.error)
           ;
@@ -90,6 +93,7 @@ export default (Vue, options) => {
       }
     },
     beforeDestroy() {
+      this.$wamp.destroy();
     }
   })
 

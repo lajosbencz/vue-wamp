@@ -63,7 +63,6 @@ connection.onopen = (session, details) => {
   timeInterval = setInterval(() => {
     const now = new Date().toISOString();
     session.publish('com.time', [], {now}, {acknowledge: true})
-      .then(() => console.log('com.time published', {now}))
       .catch(console.error)
     ;
   }, 1000);

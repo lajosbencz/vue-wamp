@@ -1,6 +1,8 @@
 import autobahn from 'autobahn'
 import pkg from '../package.json'
 
+import ConnectionContext from './ConnetionContext'
+
 const logPrefix = '[' + pkg.name + ']';
 
 const dummyConsole = {
@@ -39,6 +41,7 @@ class Connection extends autobahn.Connection {
     config = Object.assign({}, defaultConfig, config);
     super(config);
 
+    this._viewWampEvents = events;
     // plugin config
     this._vueWampCfg = config;
     // session promise resolve queue
@@ -46,13 +49,19 @@ class Connection extends autobahn.Connection {
     // session promise reject queue
     this._vueWampQRej = [];
 
+    let lastStatus = {
+      isOpen: false,
+      isRetrying: false,
+    };
+
     let _statusUpdate = (details) => {
       const status = {
         isOpen: this.isOpen,
         isRetrying: this.isRetrying,
       };
-      this.log.info('Status emit', {status, details});
-      events.$emit('status', {status, details});
+      this.log.info('Status emit', {status, lastStatus, details});
+      events.$emit('status', {status, lastStatus, details});
+      lastStatus = status;
     };
 
     this.onopen = (session, details) => {
@@ -94,18 +103,8 @@ class Connection extends autobahn.Connection {
       return stop;
     };
 
-    this.log.info('New connection', {Connection: this});
+    this.log.info('Connection create', {Connection: this});
     _statusUpdate(null);
-  }
-
-  open() {
-    this.log.info('Connection open', {Connection: this});
-    super.open();
-  }
-
-  close(reason, message) {
-    this.log.info('Connection close', {Connection: this, reason, message});
-    super.close(reason, message);
   }
 
   get version() {
@@ -131,6 +130,20 @@ class Connection extends autobahn.Connection {
       this._vueWampQRej.push(d.reject);
     }
     return d.promise;
+  }
+
+  withContext(context) {
+    return new ConnectionContext(this, context)
+  }
+
+  open() {
+    this.log.info('Connection open', {Connection: this});
+    super.open();
+  }
+
+  close(reason, message) {
+    this.log.info('Connection close', {Connection: this, reason, message});
+    super.close(reason, message);
   }
 
   call(procedure, args, kvArgs, options) {
@@ -194,7 +207,7 @@ class Connection extends autobahn.Connection {
   }
 
   unsubscribe(subscription) {
-    this.log.info('UNREGISTER', subscription);
+    this.log.info('UNSUBSCRIBE', subscription);
     const d = this.defer();
     this.sessionPromise
       .then(session =>
