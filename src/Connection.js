@@ -155,7 +155,7 @@ class Connection extends autobahn.Connection {
     this.sessionPromise
       .then(session => session.publish(topic, args, kvArgs, options).then(d.resolve, d.reject))
       .catch(d.reject);
-    return d;
+    return d.promise;
   }
 
   register(procedure, endpoint, options) {
@@ -167,7 +167,7 @@ class Connection extends autobahn.Connection {
       .then(session => session.register(procedure, endpoint, options).then(d.resolve, d.reject))
       .catch(d.reject)
     ;
-    return d;
+    return d.promise;
   }
 
   subscribe(topic, handler, options) {
