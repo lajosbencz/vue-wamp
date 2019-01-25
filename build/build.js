@@ -1,6 +1,6 @@
 
-const fs = require('fs');
-const zlib = require('zlib');
+//const fs = require('fs');
+//const zlib = require('zlib');
 const rollup = require('rollup');
 const babel = require('rollup-plugin-babel');
 const commonjs = require('rollup-plugin-commonjs');
@@ -9,7 +9,7 @@ const replace = require('rollup-plugin-replace');
 const minify = require('rollup-plugin-babel-minify');
 const json = require('rollup-plugin-json');
 const pkg = require('../package.json');
-const banner = `/*!\n * ${pkg.name} v${pkg.version}\n * ${pkg.homepage}\n * Released under the MIT License.\n */\n`;
+//const banner = `/*!\n * ${pkg.name} v${pkg.version}\n * ${pkg.homepage}\n * Released under the MIT License.\n */\n`;
 
 function rollupPlugins() {
   return [
@@ -43,19 +43,14 @@ rollup.rollup({
   .then(bundle => {
     bundle.write({
       name: 'VueWamp',
+      globals: {
+        'autobahn': 'autobahn',
+        'vue': 'Vue',
+      },
       file: pkg.browser,
       format: 'umd',
       sourcemap: true,
       sourcemapFile: pkg.browser + '.map'
-    });
-    return bundle
-  })
-  .then(bundle => {
-    bundle.write({
-      file: pkg.main,
-      format: 'cjs',
-      sourcemap: true,
-      sourcemapFile: pkg.main + '.map'
     });
     return bundle
   })
