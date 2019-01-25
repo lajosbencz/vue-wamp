@@ -181,6 +181,28 @@ class Connection extends autobahn.Connection {
       .catch(d.reject);
     return d.promise;
   }
+
+  unregister(registration) {
+    this.log.info('UNREGISTER', registration);
+    const d = this.defer();
+    this.sessionPromise
+      .then(session =>
+        session.unregister(registration).then(d.resolve, d.reject)
+      )
+      .catch(d.reject);
+    return d.promise;
+  }
+
+  unsubscribe(subscription) {
+    this.log.info('UNREGISTER', subscription);
+    const d = this.defer();
+    this.sessionPromise
+      .then(session =>
+        session.unsubscribe(subscription).then(d.resolve, d.reject)
+      )
+      .catch(d.reject);
+    return d.promise;
+  }
 }
 
 export default Connection
