@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>T2</title>
+</head>
+<body>
+<div id="app">
+    <h1>{{ title }}</h1>
+    <h2>Version: {{ $wamp.version }}</h2>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/autobahn-js-built@0.11.1/autobahn.min.js" integrity="sha256-3TKjZRGVl5JD8PzY9Zea2pVWKeA32IqWwIPKVf9G/UA=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="dist/vue-wamp.js"></script>
+<script>
+    Vue.use(VueWamp, {
+      foo: 'bar'
+    });
+
+    var vm = new Vue({
+      el: '#app',
+      data: function() {
+        return {
+          title: 'T2',
+        };
+      }
+    })
+</script>
+</body>
+</html>

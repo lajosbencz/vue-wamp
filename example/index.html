@@ -1,19 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>vue-wamp example</title>
-    </head>
-    <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <div id="app-client"></div>
+<head>
+    <meta charset="UTF-8">
+    <title>vue-wamp example</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.min.css"
+          integrity="sha256-2pUeJf+y0ltRPSbKOeJh09ipQFYxUdct5nTY6GAXswA=" crossorigin="anonymous">
+    <style>
+        [v-cloak] > * {
+            display: none;
+        }
+
+        [v-cloak]::before {
+            content: "Loading..."
+        }
+    </style>
+</head>
+<body>
+<div id="app"
+     class="container"
+     v-cloak>
+    <section class="hero is-light">
+        <div class="hero-body">
+            <div class="notification is-pulled-right"
+                 :class="{'is-success':wampIsOpen, 'is-warning':wampIsRetrying, 'is-danger':!wampIsOpen&&!wampIsRetrying}">
+                <span v-if="wampIsOpen">
+                    &check;
+                    CONNECTED
+                </span>
+                <span v-else-if="wampIsRetrying">
+                    &times;
+                    RETRYING
+                </span>
+                <span v-else>
+                    &times;
+                    DISCONNECTED
+                    <br/>
+                    <button class="button" @click="$wamp.open()">Connect</button>
+                </span>
             </div>
-            <div class="col-md-6">
-                <div id="app-server"></div>
+            <div class="container">
+                <h1 class="title">
+                    {{ title }}
+                </h1>
+                <h2 class="subtitle">
+                    v{{ $wamp.version }}
+                </h2>
             </div>
         </div>
+    </section>
+
+    <section class="container">
+        <div class="columns">
+            <div class="column">
+                <input type="checkbox" v-model="show.time"/>
+                <com-time v-if="show.time"></com-time>
+            </div>
+            <div class="column">
+                <input type="checkbox" v-model="show.sum"/>
+                <com-sum v-if="show.sum"></com-sum>
+            </div>
+            <div class="column">
+                <input type="checkbox" v-model="show.progressive"/>
+                <com-prog v-if="show.progressive"></com-prog>
+            </div>
+            <div class="column">
+                <input type="checkbox" v-model="show.callback"/>
+                <com-callback v-if="show.callback"></com-callback>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script id="com-time" type="text/x-template">
+    <div class="notification is-primary has-text-centered">
+        <h1 class="is-3 has-text-weight-bold">Time</h1>
+        <br/>
+        <span v-html="formattedTime"></span>
     </div>
-    </body>
+</script>
+
+<script id="com-sum" type="text/x-template">
+    <div class="notification is-primary has-text-centered">
+        <h1 class="is-3 has-text-weight-bold">Sum</h1>
+        <br/>
+        <input type="number" v-model="count" min="2" step="1"/>
+        <div v-for="(v,i) in list" :key="i">
+            <input type="number" v-model="list[i]"/>
+        </div>
+        <button class="button is-primary" @click="sum()">Sum!</button>
+        <div v-if="result">{{ result }}</div>
+    </div>
+</script>
+
+<script id="com-prog" type="text/x-template">
+    <div class="notification is-primary has-text-centered">
+        <h1 class="is-3 has-text-weight-bold">Progress</h1>
+        <br/>
+        <progress class="progress" :value="progress" max="100">{{ progress }}%</progress>
+        <button class="button is-primary" @click="prog()">Progress!</button>
+    </div>
+</script>
+
+<script id="com-callback" type="text/x-template">
+    <div class="notification is-primary has-text-centered">
+        <h1 class="is-3 has-text-weight-bold">Callback</h1>
+        <br/>
+        <button class="button is-primary" @click="run()">Callback!</button>
+    </div>
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/autobahn-js-built@0.11.1/autobahn.min.js"
+        integrity="sha256-3TKjZRGVl5JD8PzY9Zea2pVWKeA32IqWwIPKVf9G/UA=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+-->
+<script src="../dist/vue-wamp.js"></script>
+<script>
+
+  function guidGenerator() {
+    var S4 = function () {
+      return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    };
+    return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+  }
+
+  Vue.use(VueWamp, {
+    transports: [{
+      'type': 'websocket',
+      'url': 'ws://vue-wamp.demo.server:9001/ws/',
+      'protocols': ['wamp.2.json']
+    }],
+    realm: 'realm1',
+    max_retries: 3,
+    debug: true,
+  });
+
+  Vue.component('com-time', {
+    template: '#com-time',
+    data: function () {
+      return {
+        time: 'N/A'
+      };
+    },
+    computed: {
+      formattedTime: function () {
+        return this.time.replace('T', '<br/>').replace('Z', '');
+      },
+    },
+    wamp: {
+      subscribe: {
+        'com.time': function (args, kwargs, details) {
+          this.time = kwargs.now;
+        },
+      }
+    },
+  });
+
+  Vue.component('com-sum', {
+    template: '#com-sum',
+    data: function () {
+      return {
+        count: 2,
+        list: [2, 3],
+        result: null
+      };
+    },
+    watch: {
+      count: function (v) {
+        while (this.list.length > v) {
+          this.list.pop()
+        }
+        while (this.list.length < v) {
+          this.list.push(0)
+        }
+      },
+    },
+    computed: {
+      formattedResult: function () {
+        if (this.result === null) {
+          return 'N/A';
+        }
+        return parseFloat(this.result);
+      },
+    },
+    methods: {
+      sum: function () {
+        this.$wamp.call('rpc.sum', this.list)
+          .then(function (r) {
+            this.result = r;
+          }.bind(this), console.error)
+      },
+    },
+  });
+
+  Vue.component('com-prog', {
+    template: '#com-prog',
+    data: function () {
+      return {
+        progress: 0,
+      };
+    },
+    methods: {
+      prog: function () {
+        this.progress = 0;
+        setTimeout(function () {
+          this.$wamp.call('rpc.progress', null, {count: 100}, {receive_progress: true}).then(function (r) {
+            this.progress = r
+          }.bind(this), console.error, function (p) {
+            this.progress = p
+          }.bind(this))
+        }.bind(this), 500)
+      }
+    },
+  });
+
+  Vue.component('com-callback', {
+    template: '#com-callback',
+    data: function () {
+      return {}
+    },
+    methods: {
+      run: function () {
+        const guid = guidGenerator();
+        let registration;
+        this.$wamp.register('rpc.callback-' + guid, function (args, kwargs, details) {
+          setTimeout(function () {
+            this.$wamp.unregister(registration)
+          }.bind(this), 100);
+          console.warn('rpc.callback-' + guid);
+          return 'rpc.callback-' + guid;
+        }.bind(this), {acknowledge: true})
+          .then(function (r) {
+            registration = r;
+            this.$wamp.publish('com.callback', [guid], {foo: 'bar'});
+          }.bind(this))
+          .catch(console.error)
+        ;
+      }
+    }
+  });
+
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        title: 'vue-wamp example',
+        show: {
+          time: true,
+          sum: true,
+          progressive: true,
+          callback: true,
+        },
+      };
+    },
+    mounted: function () {
+      //this.$wamp.call('rpc.sum', [1, 2, 3]).then(console.log).catch(console.error);
+      //this.$wamp.subscribe('com.time', (args, kwargs, details) => this.time = kwargs.now)
+      this.$on('$wamp.status', function (args) {
+        console.warn('status', args)
+      });
+      // this.$on('$wamp.opened', function (args) {
+      //   console.warn('opened', args)
+      // });
+      // this.$on('$wamp.retrying', function (args) {
+      //   console.warn('retrying', args)
+      // });
+      // this.$on('$wamp.closed', function (args) {
+      //   console.warn('closed', args)
+      // });
+    },
+  });
+</script>
+</body>
 </html>
