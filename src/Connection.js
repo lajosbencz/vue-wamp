@@ -160,6 +160,11 @@ class Connection extends autobahn.Connection {
     super.close(reason, message);
   }
 
+  reconnect() {
+    this.close('wamp.goodbye.reconnect');
+    this.open();
+  }
+
   call(procedure, args, kwargs, options) {
     args = args || [];
     kwargs = kwargs || {};
