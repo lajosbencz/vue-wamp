@@ -28,6 +28,30 @@ class Persist {
     });
   }
 
+  unsubscribe(subscription) {
+    for(let i in this._subscriptions) {
+      if(!this._subscriptions.hasOwnProperty(i)) {
+        continue;
+      }
+      const s = this._subscriptions[i];
+      if(s === subscription) {
+        this._subscriptions = this._subscriptions.splice(i, 1);
+      }
+    }
+  }
+
+  unregister(registration) {
+    for(let i in this._registrations) {
+      if(!this._registrations.hasOwnProperty(i)) {
+        continue;
+      }
+      const r = this._registrations[i];
+      if(r === registration) {
+        this._registrations = this._registrations.splice(i, 1);
+      }
+    }
+  }
+
   clear() {
     this._reconnectors = [];
   }

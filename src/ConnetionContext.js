@@ -75,10 +75,30 @@ class ConnectionContext  {
   }
 
   unsubscribe(subscription) {
+    for(let i in this._subscriptions) {
+      if(!this._subscriptions.hasOwnProperty(i)) {
+        continue;
+      }
+      const s = this._subscriptions[i];
+      if(s === subscription) {
+        this._subscriptions = this._subscriptions.splice(i, 1);
+      }
+    }
+    this._persist.unsubscribe(subscription);
     return this._con.unsubscribe(subscription);
   }
 
   unregister(registration) {
+    for(let i in this._registrations) {
+      if(!this._registrations.hasOwnProperty(i)) {
+        continue;
+      }
+      const r = this._registrations[i];
+      if(r === registration) {
+        this._registrations = this._registrations.splice(i, 1);
+      }
+    }
+    this._persist.unregister(registration);
     return this._con.unregister(registration);
   }
 
