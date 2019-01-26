@@ -4,7 +4,7 @@
 * Calls to _subscribe, register, publish, call, unsubscribe, unregister_ are deferred, so that they are executed as soon as the Session object of Autobahn is available
 * [Plugin packaging](#configuration)
 * [Global, static methods](#static-methods)
-* [Vue prototype methods](#prototype-methods)
+* [Vue mixin methods](#mixin-methods)
 * Automatic garbage collection for Registration and Subscription objects component-wise when used through option (acknowledge option is forced)
 
 Since v2.0.0:
