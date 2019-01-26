@@ -1,10 +1,12 @@
 
-!**/.gitkeep
-
 /.idea/
-/node_modules/
-/example/dist/*
-/example/.crossbar/key.*
-/example/.crossbar/*.pid
 
+/node_modules/
 package-lock.json
+
+/example/dist/*
+**/*.pid
+key.priv
+key.pub
+
+!**/.gitkeep

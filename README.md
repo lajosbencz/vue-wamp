@@ -1,17 +1,16 @@
 # vue-wamp
 ### Autobahn wrapper for Vue, served as a plugin 
 
-__This release only supports VueJS 2, I have no plan to create a VueJS 1 compatible branch, but pull requests are always welcome!__
-
-Since v0.0.1:
 * Calls to _subscribe, register, publish, call, unsubscribe, unregister_ are deferred, so that they are executed as soon as the Session object of Autobahn is available
 * [Plugin packaging](#configuration)
 * [Global, static methods](#static-methods)
 * [Vue prototype methods](#prototype-methods)
 * Automatic garbage collection for Registration and Subscription objects component-wise when used through option (acknowledge option is forced)
 
-Since v1.3.0:
-* Automatic re-subscribe/register if the connection was lost then re-established
+Since v2.0.0:
+* Automatic re-subscribe/register if the connection was lost then re-established (only works with mixin methods and component config)
+* Reactive global state
+* Events
 
 ## Installation
 
@@ -38,7 +37,7 @@ Lately the demo router was unavailable, so i changed to config to connect to a l
 import VueWamp from 'vue-wamp'
 
 Vue.use(VueWamp, {
-    debug: true,
+    debug: true, // Logs will be written to the console
     url: 'ws://demo.crossbar.io/ws',
     realm: 'realm1',
     onopen: function(session, details) {
@@ -48,6 +47,32 @@ Vue.use(VueWamp, {
         console.log('WAMP closed: ' + reason, details);
     }
 });
+```
+
+## Global status
+
+```vue
+<template>
+    <div>
+        <span v-if="wampIsOpen">Connected</span>
+        <span v-else-if="wampIsRetrying">Retrying...</span>
+        <span v-else>Disconnected</span>    
+    </div>
+</template>
+```
+
+## Events
+
+```js
+export default {
+  mounted() {
+    this.$on('$wamp.status', ({status, lastStatus, details}) => {});
+    this.$on('$wamp.opened', ({status, lastStatus, details}) => {});
+    this.$on('$wamp.closed', ({status, lastStatus, details}) => {});
+    this.$on('$wamp.retrying', ({status, lastStatus, details}) => {});
+    this.$on('$wamp.reconnected', ({status, lastStatus, details}) => {});
+  },
+}
 ```
 
 ## Usage
@@ -76,7 +101,7 @@ export default {
             },
             'another-topic': {
                 acknowledge: true,
-                function(args, kwArgs, details) {
+                handler(args, kwArgs, details) {
                     // do stuff
                 }
             }
@@ -87,7 +112,7 @@ export default {
             },
             'another-rpc': {
                 invoke: 'random',
-                function(args, kwArgs, details) {
+                handler(args, kwArgs, details) {
                     // more stuff
                 }
             }
@@ -113,7 +138,7 @@ Vue.Wamp.subscribe('some-topic', function(args, kwArgs, details) {
 });
 ```
 
-## Prototype methods
+## Mixin methods
 
 ```this.$wamp.subscribe```, ```this.$wamp.publish```, ```this.$wamp.register```, ```this.$wamp.call```, ```this.$wamp.unsubscribe```, ```this.$wamp.unregister```
 
@@ -137,22 +162,8 @@ export default {
 }
 ```
 
-## Mixin methods
+## Todo
 
-!**Deprecated since 1.3.0**!
-
-```this.$wampSubscribe```, ```this.$wampPublish```, ```this.$wampRegister```, ```this.$wampCall```, ```this.$wampUnsubscribe```, ```this.$wampUnregister```
-
-```js
-export default {
-    mounted() {
-        this.$wampSubscribe('some-topic', function(args, kwArgs, details) {
-            // context is VueComponent, Subscription will be unsubscribed if component is destroyed
-        }, {
-            // acknowledge: true // option not needed anymore, it's forced
-        }).then(function(s) {
-            console.log('AutobahnJS Subscription object: ', s); 
-        });
-    }
-}
-```
+* Tests
+* Improve on src
+* Improve on builder
