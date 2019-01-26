@@ -1,31 +1,21 @@
 
+import Persist from './Persist.js'
 
 class ConnectionContext  {
 
-  constructor(Connection, context) {
-    this._con = Connection;
+  constructor(connection, context, events) {
+    this._con = connection;
     this._ctx = context;
+    this._persist = new Persist(connection, events);
+    events.$on('reconnected', () => {
+      this._persist.reconnected();
+    });
+    events.$on('closed', () => {
+      this.closed();
+      this._persist.closed();
+    });
     this._subscriptions = [];
-    this._regisrations = [];
-    this._reconnectors = [];
-    this._con._viewWampEvents.$on('status', ({status, lastStatus, details}) => {
-      if(lastStatus.isOpen !== status.isOpen && status.isOpen) {
-        for(let i in this._reconnectors) {
-          if(this._reconnectors.hasOwnProperty(i)) {
-              const r = this._reconnectors[i];
-              r.call(this);
-          }
-        }
-        // while(this._reconnectors.length > 0) {
-        //   const r = this._reconnectors.shift();
-        //   r.call(this);
-        // }
-      }
-    })
-  }
-
-  get isClosed() {
-    return this._con.isClosed;
+    this._registrations = [];
   }
 
   get isConnected() {
@@ -62,13 +52,7 @@ class ConnectionContext  {
         d.resolve(subscription);
       }, d.reject)
     ;
-    this._reconnectors.push(() => {
-      this._con.subscribe(topic, handler, options)
-        .then(subscription => {
-          this._subscriptions.push(subscription);
-        }, console.error)
-      ;
-    });
+    this._persist.subscribe(topic, handler, options);
     return d.promise;
   }
 
@@ -78,17 +62,11 @@ class ConnectionContext  {
     const d = this._con.defer();
     this._con.register(procedure, endpoint, options)
       .then(registration => {
-        this._regisrations.push(registration);
+        this._registrations.push(registration);
         d.resolve(registration);
       }, d.reject)
     ;
-    this._reconnectors.push(() => {
-      this._con.register(procedure, endpoint, options)
-        .then(registration => {
-          this._regisrations.push(registration);
-        }, console.error)
-      ;
-    });
+    this._persist.register(procedure, endpoint, options);
     return d.promise;
   }
 
@@ -104,15 +82,21 @@ class ConnectionContext  {
     return this._con.unregister(registration);
   }
 
-  destroy() {
-    while(this._regisrations.length > 0) {
-      const i = this._regisrations.shift();
-      this.unregister(i).catch(() => {});
-    }
+  closed() {
     while(this._subscriptions.length > 0) {
-      const i = this._subscriptions.shift();
-      this.unsubscribe(i).catch(() => {});
+      const s = this._subscriptions.shift();
+      this._con.unsubscribe(s).catch(() => {});
     }
+    while(this._registrations.length >0) {
+      const r = this._registrations.shift();
+      this._con.unregister(r).catch(() => {});
+    }
+  }
+
+  destroy() {
+    this.closed();
+    this._persist.closed();
+    this._persist.clear();
   }
 
 }

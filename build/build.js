@@ -9,7 +9,7 @@ const replace = require('rollup-plugin-replace');
 const minify = require('rollup-plugin-babel-minify');
 const json = require('rollup-plugin-json');
 const pkg = require('../package.json');
-//const banner = `/*!\n * ${pkg.name} v${pkg.version}\n * ${pkg.homepage}\n * Released under the MIT License.\n */\n`;
+const banner = `/*!\n * ${pkg.name} v${pkg.version}\n * ${pkg.homepage}\n * Released under the MIT License.\n */\n`;
 
 function rollupPlugins() {
   return [
@@ -26,9 +26,12 @@ function rollupPlugins() {
     }),
     commonjs(),
     minify({
+      banner,
+      bannerNewLine: true,
+      comments: false,
       mangle: { topLevel: true }
     }),
-    json()
+    json(),
   ];
 }
 

@@ -25,6 +25,7 @@ export default (Vue, options) => {
   Vue.mixin({
     data() {
       return {
+        wampIsConnected: false,
         wampIsOpen: false,
         wampIsRetrying: false,
       }
@@ -32,18 +33,16 @@ export default (Vue, options) => {
     created() {
 
       if (this === this.$root) {
-        events.$on('status', ({status, details}) => {
-          C.log.info('Status changed', status);
-          this.wampIsOpen = !!status.isOpen;
-          this.wampIsRetrying = !!status.isRetrying;
-          this.$emit('$wamp.status', {status, details});
-          if (this.wampIsOpen)
-            this.$emit('$wamp.opened', details);
-          else if (this.wampIsRetrying)
-            this.$emit('$wamp.retrying', details);
-          else
-            this.$emit('$wamp.closed', details);
+        events.$on('status', (e) => {
+          this.wampIsConnected = e.status.isConnected;
+          this.wampIsOpen = e.status.isOpen;
+          this.wampIsRetrying = e.status.isRetrying;
+          this.$emit('$wamp.status', e);
         });
+        events.$on('opened', (e) => this.$emit('$wamp.opened', e));
+        events.$on('closed', (e) => this.$emit('$wamp.closed', e));
+        events.$on('retrying', (e) => this.$emit('$wamp.retrying', e));
+        events.$on('reconnected', (e) => this.$emit('$wamp.reconnected', e));
       }
 
       if (!this.$options.wamp)

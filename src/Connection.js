@@ -2,6 +2,7 @@ import autobahn from 'autobahn'
 import pkg from '../package.json'
 
 import ConnectionContext from './ConnetionContext'
+import Persist from "./Persist";
 
 const logPrefix = '[' + pkg.name + ']';
 
@@ -41,7 +42,8 @@ class Connection extends autobahn.Connection {
     config = Object.assign({}, defaultConfig, config);
     super(config);
 
-    this._viewWampEvents = events;
+    // plugin events
+    this._vueWampEvents = events;
     // plugin config
     this._vueWampCfg = config;
     // session promise resolve queue
@@ -49,19 +51,34 @@ class Connection extends autobahn.Connection {
     // session promise reject queue
     this._vueWampQRej = [];
 
-    let lastStatus = {
+    let _lastStatus = {
+      isConnected: false,
       isOpen: false,
       isRetrying: false,
     };
 
-    let _statusUpdate = (details) => {
+    const _statusUpdate = (details) => {
       const status = {
+        isConnected: this.isConnected,
         isOpen: this.isOpen,
         isRetrying: this.isRetrying,
       };
-      this.log.info('Status emit', {status, lastStatus, details});
-      events.$emit('status', {status, lastStatus, details});
-      lastStatus = status;
+      const e = {status, lastStatus: _lastStatus, details};
+      this.log.info('Status emit', e);
+      events.$emit('status', e);
+      if(status.isOpen && !_lastStatus.isOpen) {
+        events.$emit('opened', e);
+        if(!status.isRetrying && _lastStatus.isRetrying) {
+          events.$emit('reconnected', e);
+        }
+      }
+      else if(!status.isOpen && _lastStatus.isOpen) {
+        events.$emit('closed', e);
+      }
+      if(status.isRetrying && !_lastStatus.isRetrying) {
+        events.$emit('retrying', e);
+      }
+      _lastStatus = status;
     };
 
     this.onopen = (session, details) => {
@@ -74,6 +91,9 @@ class Connection extends autobahn.Connection {
       }
       this.log.info('Sessions resolved:', l);
       this._vueWampQRej = [];
+      if(config.hasOwnProperty('onopen') && typeof config.onopen === "function") {
+        config.onopen(session, details);
+      }
     };
 
     this.onclose = (reason, details) => {
@@ -83,15 +103,6 @@ class Connection extends autobahn.Connection {
         this._autoreconnect_reset();
         stop = true;
       }
-      switch (reason) {
-        default:
-        case 'lost':
-        case 'unreachable':
-          break;
-        case 'closed':
-        case 'unsupported':
-          break;
-      }
       _statusUpdate(details);
       const l = this._vueWampQRej.length;
       while (this._vueWampQRej.length > 0) {
@@ -100,6 +111,9 @@ class Connection extends autobahn.Connection {
       }
       this.log.info('Sessions rejected:', l);
       this._vueWampQRes = [];
+      if(config.hasOwnProperty('onclose') && typeof config.onclose === "function") {
+        config.onclose(session, details);
+      }
       return stop;
     };
 
@@ -115,9 +129,9 @@ class Connection extends autobahn.Connection {
     return this._vueWampCfg.debug ? debugConsole : dummyConsole
   }
 
-  get isClosed() {
-    return !(this.isOpen || this.isRetrying)
-  }
+  // get isClosed() {
+  //   return !(this.isConnected || this.isOpen || this.isRetrying)
+  // }
 
   get sessionPromise() {
     const d = this.defer();
@@ -133,7 +147,7 @@ class Connection extends autobahn.Connection {
   }
 
   withContext(context) {
-    return new ConnectionContext(this, context)
+    return new ConnectionContext(this, context, this._vueWampEvents)
   }
 
   open() {
@@ -146,27 +160,27 @@ class Connection extends autobahn.Connection {
     super.close(reason, message);
   }
 
-  call(procedure, args, kvArgs, options) {
+  call(procedure, args, kwargs, options) {
     args = args || [];
-    kvArgs = kvArgs || {};
+    kwargs = kwargs || {};
     options = options || {};
-    this.log.info('CALL', {procedure, args, kvArgs, options});
+    this.log.info('CALL', {procedure, args, kwargs, options});
     const d = this.defer();
     this.sessionPromise
-      .then(session => session.call(procedure, args, kvArgs, options).then(d.resolve, d.reject, d.notify))
+      .then(session => session.call(procedure, args, kwargs, options).then(d.resolve, d.reject, d.notify))
       .catch(d.reject);
     return d.promise;
   }
 
-  publish(topic, args, kvArgs, options) {
+  publish(topic, args, kwargs, options) {
     args = args || [];
-    kvArgs = kvArgs || {};
+    kwargs = kwargs || {};
     options = options || {};
     options.acknowledge = true;
-    this.log.info('PUBLISH', {topic, args, kvArgs, options});
+    this.log.info('PUBLISH', {topic, args, kwargs, options});
     const d = this.defer();
     this.sessionPromise
-      .then(session => session.publish(topic, args, kvArgs, options).then(d.resolve, d.reject))
+      .then(session => session.publish(topic, args, kwargs, options).then(d.resolve, d.reject))
       .catch(d.reject);
     return d.promise;
   }

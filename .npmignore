@@ -1,0 +1,8 @@
+build/
+example/
+node_modules/
+src/
+.babelrc
+package-lock.json
+t1.html
+t2.html
