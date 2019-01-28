@@ -8,7 +8,10 @@
   "browser": "dist/vue-wamp.js",
   "jsdelivr": "dist/vue-wamp.min.js",
   "scripts": {
-    "build": "node build/build.js",
+    "build": "npm run build:main && npm run build:module && npm run build:browser",
+    "build:main": "node build/cjs.js",
+    "build:module": "node build/esm.js",
+    "build:browser": "node build/umd.js",
     "example:router": "cd example/router && crossbar start",
     "example:server": "node example/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
