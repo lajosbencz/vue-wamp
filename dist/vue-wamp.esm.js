@@ -1,5 +1,5 @@
 /*!
- * vue-wamp v2.0.3
+ * vue-wamp v2.0.5
  * https://github.com/lajosbencz/vue-wamp#readme
  * Released under the MIT License.
  */
@@ -346,11 +346,17 @@ class Connection extends autobahn.Connection {
   }
 
   open() {
+    if(this.isConnected || this.isOpen) {
+      return;
+    }
     this.log.info('Connection open', {Connection: this});
     super.open();
   }
 
   close(reason, message) {
+    if(!this.isConnected && !this.isOpen && !this.isRetrying) {
+      return;
+    }
     this.log.info('Connection close', {Connection: this, reason, message});
     super.close(reason, message);
   }

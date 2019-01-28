@@ -1,6 +1,6 @@
 {
   "name": "vue-wamp",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "WAMP protocol wrapper library for Vue",
   "private": false,
   "main": "dist/vue-wamp.cjs.js",
