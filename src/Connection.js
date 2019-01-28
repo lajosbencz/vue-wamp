@@ -146,11 +146,17 @@ class Connection extends autobahn.Connection {
   }
 
   open() {
+    if(this.isConnected || this.isOpen) {
+      return;
+    }
     this.log.info('Connection open', {Connection: this});
     super.open();
   }
 
   close(reason, message) {
+    if(!this.isConnected && !this.isOpen && !this.isRetrying) {
+      return;
+    }
     this.log.info('Connection close', {Connection: this, reason, message});
     super.close(reason, message);
   }
