@@ -1,10 +1,9 @@
 import autobahn from 'autobahn'
-import pkg from '../package.json'
 
 import ConnectionContext from './ConnetionContext'
-import Persist from "./Persist";
+import pkg from "../package";
 
-const logPrefix = '[' + pkg.name + ']';
+const logPrefix = '[vue-wamp]';
 
 const dummyConsole = {
   log: () => {
@@ -119,10 +118,6 @@ class Connection extends autobahn.Connection {
 
     this.log.info('Connection create', {Connection: this});
     _statusUpdate(null);
-  }
-
-  get version() {
-    return pkg.version;
   }
 
   get log() {
