@@ -1,6 +1,537 @@
 /*!
- * vue-wamp v2.0.2
+ * vue-wamp v2.0.3
  * https://github.com/lajosbencz/vue-wamp#readme
  * Released under the MIT License.
- */"use strict";function a(a){return a&&"object"==typeof a&&"default"in a?a["default"]:a}var b=a(require("autobahn"));function c(a,b){return b={exports:{}},a(b,b.exports),b.exports}var d=c(function(a){var b=a.exports="undefined"!=typeof window&&window.Math==Math?window:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")();"number"==typeof __g&&(__g=b)}),e=c(function(a){var b=a.exports={version:"2.6.3"};"number"==typeof __e&&(__e=b)}),g=e.version,h=function(a){return"object"==typeof a?null!==a:"function"==typeof a},i=function(a){if(!h(a))throw TypeError(a+" is not an object!");return a},j=function(a){try{return!!a()}catch(a){return!0}},k=!j(function(){return 7!=Object.defineProperty({},"a",{get:function(){return 7}}).a}),l=d.document,m=h(l)&&h(l.createElement),n=function(a){return m?l.createElement(a):{}},o=!k&&!j(function(){return 7!=Object.defineProperty(n("div"),"a",{get:function(){return 7}}).a}),p=function(a,b){if(!h(a))return a;var c,d;if(b&&"function"==typeof(c=a.toString)&&!h(d=c.call(a)))return d;if("function"==typeof(c=a.valueOf)&&!h(d=c.call(a)))return d;if(!b&&"function"==typeof(c=a.toString)&&!h(d=c.call(a)))return d;throw TypeError("Can't convert object to primitive value")},q=Object.defineProperty,r=k?Object.defineProperty:function(a,b,c){if(i(a),b=p(b,!0),i(c),o)try{return q(a,b,c)}catch(a){}if("get"in c||"set"in c)throw TypeError("Accessors not supported!");return"value"in c&&(a[b]=c.value),a},f={f:r},s=function(a,b){return{enumerable:!(1&a),configurable:!(2&a),writable:!(4&a),value:b}},t=k?function(a,b,c){return f.f(a,b,s(1,c))}:function(a,b,c){return a[b]=c,a},u={}.hasOwnProperty,v=function(a,b){return u.call(a,b)},w=0,x=Math.random(),y=function(a){return"Symbol(".concat(a===void 0?"":a,")_",(++w+x).toString(36))},z=c(function(a){var b=y("src"),c="toString",f=Function[c],g=(""+f).split(c);e.inspectSource=function(a){return f.call(a)},(a.exports=function(a,c,e,f){var h="function"==typeof e;h&&(v(e,"name")||t(e,"name",c));a[c]===e||(h&&(v(e,b)||t(e,b,a[c]?""+a[c]:g.join(c+""))),a===d?a[c]=e:f?a[c]?a[c]=e:t(a,c,e):(delete a[c],t(a,c,e)))})(Function.prototype,c,function(){return"function"==typeof this&&this[b]||f.call(this)})}),A=function(a){if("function"!=typeof a)throw TypeError(a+" is not a function!");return a},B=function(d,e,f){return(A(d),void 0===e)?d:1===f?function(b){return d.call(e,b)}:2===f?function(c,a){return d.call(e,c,a)}:3===f?function(f,a,b){return d.call(e,f,a,b)}:function(){return d.apply(e,arguments)}},C="prototype",D=function(a,b,c){var f,g,h,i,j=a&D.F,k=a&D.G,l=a&D.S,m=a&D.P,n=a&D.B,o=k?d:l?d[b]||(d[b]={}):(d[b]||{})[C],p=k?e:e[b]||(e[b]={}),q=p[C]||(p[C]={});for(f in k&&(c=b),c)g=!j&&o&&void 0!==o[f],h=(g?o:c)[f],i=n&&g?B(h,d):m&&"function"==typeof h?B(Function.call,h):h,o&&z(o,f,h,a&D.U),p[f]!=h&&t(p,f,i),m&&q[f]!=h&&(q[f]=h)};d.core=e,D.F=1,D.G=2,D.S=4,D.P=8,D.B=16,D.W=32,D.U=64,D.R=128;var E=D,F={}.toString,G=function(a){return F.call(a).slice(8,-1)},H=Object("z").propertyIsEnumerable(0)?Object:function(a){return"String"==G(a)?a.split(""):Object(a)},I=function(a){if(a==null)throw TypeError("Can't call method on  "+a);return a},J=function(a){return H(I(a))},K=Math.ceil,L=Math.floor,M=function(a){return isNaN(a=+a)?0:(0<a?L:K)(a)},N=Math.min,P=function(a){return 0<a?N(M(a),9007199254740991):0},Q=Math.max,R=Math.min,S=function(a,b){return a=M(a),0>a?Q(a+b,0):R(a,b)},T=function(a){return function(b,c,d){var e,f=J(b),g=P(f.length),h=S(d,g);if(a&&c!=c){for(;g>h;)if(e=f[h++],e!=e)return!0;}else for(;g>h;h++)if((a||h in f)&&f[h]===c)return a||h||0;return!a&&-1}},U=!1,V=c(function(a){var b=d["__core-js_shared__"]||(d["__core-js_shared__"]={});(a.exports=function(a,c){return b[a]||(b[a]=c===void 0?{}:c)})("versions",[]).push({version:e.version,mode:U?"pure":"global",copyright:"\xA9 2019 Denis Pushkarev (zloirock.ru)"})}),W=V("keys"),X=function(a){return W[a]||(W[a]=y(a))},Y=T(!1),Z=X("IE_PROTO"),$=function(a,b){var c,d=J(a),e=0,f=[];for(c in d)c!=Z&&v(d,c)&&f.push(c);for(;b.length>e;)v(d,c=b[e++])&&(~Y(f,c)||f.push(c));return f},_=["constructor","hasOwnProperty","isPrototypeOf","propertyIsEnumerable","toLocaleString","toString","valueOf"],aa=Object.keys||function(a){return $(a,_)},ba=Object.getOwnPropertySymbols,ca={f:ba},da={}.propertyIsEnumerable,ea={f:da},fa=function(a){return Object(I(a))},ga=Object.assign,ha=!ga||j(function(){var a={},b={},c=Symbol(),d="abcdefghijklmnopqrst";return a[c]=7,d.split("").forEach(function(a){b[a]=a}),7!=ga({},a)[c]||Object.keys(ga({},b)).join("")!=d})?function(a){for(var b=fa(a),c=arguments.length,d=1,e=ca.f,f=ea.f;c>d;)for(var g,h=H(arguments[d++]),i=e?aa(h).concat(e(h)):aa(h),k=i.length,l=0;k>l;)f.call(h,g=i[l++])&&(b[g]=h[g]);return b}:ga;E(E.S+E.F,"Object",{assign:ha});var ia=f.f,ja=Function.prototype,ka=/^\s*function ([^ (]*)/,la="name";la in ja||k&&ia(ja,la,{configurable:!0,get:function(){try{return(""+this).match(ka)[1]}catch(a){return""}}});function ma(a,b){if(!(a instanceof b))throw new TypeError("Cannot call a class as a function")}function na(a,b){for(var c,d=0;d<b.length;d++)c=b[d],c.enumerable=c.enumerable||!1,c.configurable=!0,"value"in c&&(c.writable=!0),Object.defineProperty(a,c.key,c)}function oa(a,b,c){return b&&na(a.prototype,b),c&&na(a,c),a}function pa(a,b){if("function"!=typeof b&&null!==b)throw new TypeError("Super expression must either be null or a function");a.prototype=Object.create(b&&b.prototype,{constructor:{value:a,writable:!0,configurable:!0}}),b&&ra(a,b)}function qa(a){return qa=Object.setPrototypeOf?Object.getPrototypeOf:function(a){return a.__proto__||Object.getPrototypeOf(a)},qa(a)}function ra(a,b){return ra=Object.setPrototypeOf||function(a,b){return a.__proto__=b,a},ra(a,b)}function sa(a){if(void 0===a)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return a}function ta(a,b){return b&&("object"==typeof b||"function"==typeof b)?b:sa(a)}function ua(a,b){for(;!Object.prototype.hasOwnProperty.call(a,b)&&(a=qa(a),null!==a););return a}function va(a,b,c){return va="undefined"!=typeof Reflect&&Reflect.get?Reflect.get:function(a,b,c){var d=ua(a,b);if(d){var e=Object.getOwnPropertyDescriptor(d,b);return e.get?e.get.call(c):e.value}},va(a,b,c||a)}var wa="vue-wamp",xa="2.0.2",ya="WAMP protocol wrapper library for Vue",za="dist/vue-wamp.cjs.js",Aa="dist/vue-wamp.esm.js",Ba="dist/vue-wamp.js",Ca="dist/vue-wamp.min.js",Da={build:"node build/build.js","example:router":"cd example/router && crossbar start","example:server":"node example/server.js",test:"echo \"Error: no test specified\" && exit 1"},Ea={type:"git",url:"git+https://github.com/lajosbencz/vue-wamp"},Fa=["vue","wamp","autobahn","websocket"],Ga="Lajos Bencz <lazos@lazos.me>",Ha="MIT",Ia={url:"https://github.com/lajosbencz/vue-wamp/issues"},Ja="https://github.com/lajosbencz/vue-wamp#readme",Ka={autobahn:"*",vue:"*"},La={"@babel/plugin-external-helpers":"^7.2.0","@babel/plugin-transform-parameters":"^7.2.0","@babel/preset-env":"^7.3.1","@babel/polyfill":"^7.2.5",autobahn:"^18.10.2",rollup:"^1.1.2","rollup-plugin-babel":"^4.3.2","rollup-plugin-babel-minify":"^7.0.0","rollup-plugin-commonjs":"^9.2.0","rollup-plugin-json":"^3.1.0","rollup-plugin-node-resolve":"^4.0.0","rollup-plugin-replace":"^2.1.0"},Ma={name:"vue-wamp",version:xa,description:ya,private:!1,main:za,module:Aa,browser:Ba,jsdelivr:Ca,scripts:Da,repository:Ea,keywords:Fa,author:Ga,license:Ha,bugs:Ia,homepage:Ja,peerDependencies:Ka,devDependencies:La},Na=function(){function a(b){ma(this,a),this._con=b,this._reconnectors=[],this._subscriptions=[],this._registrations=[]}return oa(a,[{key:"subscribe",value:function(a,b,c){var d=this;c=c||{},c.acknowledge=!0,this._reconnectors.push(function(){d._con.subscribe(a,b,c).then(function(a){return d._subscriptions.push(a)}).catch(console.error)})}},{key:"register",value:function(a,b,c){var d=this;c=c||{},c.acknowledge=!0,this._reconnectors.push(function(){d._con.register(a,b,c).then(function(a){return d._registrations.push(a)}).catch(console.error)})}},{key:"unsubscribe",value:function(a){for(var b in this._subscriptions)if(this._subscriptions.hasOwnProperty(b)){var c=this._subscriptions[b];c===a&&(this._subscriptions=this._subscriptions.splice(b,1))}}},{key:"unregister",value:function(a){for(var b in this._registrations)if(this._registrations.hasOwnProperty(b)){var c=this._registrations[b];c===a&&(this._registrations=this._registrations.splice(b,1))}}},{key:"clear",value:function(){this._reconnectors=[]}},{key:"reconnected",value:function(){for(var a in this._reconnectors){var b=this._reconnectors[a];b()}}},{key:"closed",value:function(){for(;0<this._subscriptions.length;){var a=this._subscriptions.shift();this._con.unsubscribe(a).catch(function(){})}for(;0<this._registrations.length;){var b=this._registrations.shift();this._con.unregister(b).catch(function(){})}}}]),a}(),Oa=function(){function a(b,c,d){var e=this;ma(this,a),this._con=b,this._ctx=c,this._persist=new Na(b,d),d.$on("reconnected",function(){e._persist.reconnected()}),d.$on("closed",function(){e.closed(),e._persist.closed()}),this._subscriptions=[],this._registrations=[]}return oa(a,[{key:"open",value:function(){return this._con.open()}},{key:"close",value:function(a,b){return this._con.close(a,b)}},{key:"call",value:function(a,b,c,d){return this._con.call(a,b,c,d)}},{key:"subscribe",value:function(a,b,c){var e=this;c=c||{},c.acknowledge=!0;var f=this._con.defer();return this._con.subscribe(a,b,c).then(function(a){e._subscriptions.push(a),f.resolve(a)},f.reject),this._persist.subscribe(a,b,c),f.promise}},{key:"register",value:function(a,b,c){var e=this;c=c||{},c.acknowledge=!0;var f=this._con.defer();return this._con.register(a,b,c).then(function(a){e._registrations.push(a),f.resolve(a)},f.reject),this._persist.register(a,b,c),f.promise}},{key:"publish",value:function(a,b,c,d){return this._con.publish(a,b,c,d)}},{key:"unsubscribe",value:function(a){for(var b in this._subscriptions)if(this._subscriptions.hasOwnProperty(b)){var c=this._subscriptions[b];c===a&&(this._subscriptions=this._subscriptions.splice(b,1))}return this._persist.unsubscribe(a),this._con.unsubscribe(a)}},{key:"unregister",value:function(a){for(var b in this._registrations)if(this._registrations.hasOwnProperty(b)){var c=this._registrations[b];c===a&&(this._registrations=this._registrations.splice(b,1))}return this._persist.unregister(a),this._con.unregister(a)}},{key:"closed",value:function(){for(;0<this._subscriptions.length;){var a=this._subscriptions.shift();this._con.unsubscribe(a).catch(function(){})}for(;0<this._registrations.length;){var b=this._registrations.shift();this._con.unregister(b).catch(function(){})}}},{key:"destroy",value:function(){this.closed(),this._persist.closed(),this._persist.clear()}},{key:"isConnected",get:function(){return this._con.isConnected}},{key:"isOpen",get:function(){return this._con.isOpen}},{key:"isRetrying",get:function(){return this._con.isRetrying}}]),a}(),Pa="["+Ma.name+"]",Qa={log:function(){},info:function(){},warn:function(){},error:function(){}},Ra={log:function(){for(var b,c=arguments.length,d=Array(c),a=0;a<c;a++)d[a]=arguments[a];(b=console).log.apply(b,[Pa].concat(d))},info:function(){for(var b,c=arguments.length,d=Array(c),a=0;a<c;a++)d[a]=arguments[a];(b=console).info.apply(b,[Pa].concat(d))},warn:function(){for(var b,c=arguments.length,d=Array(c),a=0;a<c;a++)d[a]=arguments[a];(b=console).warn.apply(b,[Pa].concat(d))},error:function(){for(var b,c=arguments.length,d=Array(c),a=0;a<c;a++)d[a]=arguments[a];(b=console).error.apply(b,[Pa].concat(d))}},Sa={debug:!1},Ta=function(a){function b(a,c){var d;ma(this,b),a=Object.assign({},Sa,a),d=ta(this,qa(b).call(this,a)),d._vueWampEvents=c,d._vueWampCfg=a,d._vueWampQRes=[],d._vueWampQRej=[];var f={isConnected:!1,isOpen:!1,isRetrying:!1},g=function(a){var b={isConnected:d.isConnected,isOpen:d.isOpen,isRetrying:d.isRetrying},g={status:b,lastStatus:f,details:a};d.log.info("Status emit",g),c.$emit("status",g),b.isOpen&&!f.isOpen?(c.$emit("opened",g),!b.isRetrying&&f.isRetrying&&c.$emit("reconnected",g)):!b.isOpen&&f.isOpen&&c.$emit("closed",g),b.isRetrying&&!f.isRetrying&&c.$emit("retrying",g),f=b};return d.onopen=function(b,c){d.log.info("Connection opened",{session:b,details:c}),g(c);for(var e,f=d._vueWampQRes.length;0<d._vueWampQRes.length;)e=d._vueWampQRes.shift(),e(b);d.log.info("Sessions resolved:",f),d._vueWampQRej=[],a.hasOwnProperty("onopen")&&"function"==typeof a.onopen&&a.onopen(b,c)},d.onclose=function(b,c){d.log.info("Connection closed",{reason:b,details:c});var e=!1;c.will_retry||(d._autoreconnect_reset(),e=!0),g(c);for(var f,h=d._vueWampQRej.length;0<d._vueWampQRej.length;)f=d._vueWampQRej.shift(),f({reason:b,details:c});return d.log.info("Sessions rejected:",h),d._vueWampQRes=[],a.hasOwnProperty("onclose")&&"function"==typeof a.onclose&&a.onclose(session,c),e},d.log.info("Connection create",{Connection:sa(sa(d))}),g(null),d}return pa(b,a),oa(b,[{key:"withContext",value:function(a){return new Oa(this,a,this._vueWampEvents)}},{key:"open",value:function(){this.log.info("Connection open",{Connection:this}),va(qa(b.prototype),"open",this).call(this)}},{key:"close",value:function(a,c){this.log.info("Connection close",{Connection:this,reason:a,message:c}),va(qa(b.prototype),"close",this).call(this,a,c)}},{key:"reconnect",value:function(){this.close("wamp.goodbye.reconnect"),this.open()}},{key:"call",value:function(a,b,c,e){b=b||[],c=c||{},e=e||{},this.log.info("CALL",{procedure:a,args:b,kwargs:c,options:e});var f=this.defer();return this.sessionPromise.then(function(d){return d.call(a,b,c,e).then(f.resolve,f.reject,f.notify)}).catch(f.reject),f.promise}},{key:"publish",value:function(a,b,c,e){b=b||[],c=c||{},e=e||{},e.acknowledge=!0,this.log.info("PUBLISH",{topic:a,args:b,kwargs:c,options:e});var f=this.defer();return this.sessionPromise.then(function(d){return d.publish(a,b,c,e).then(f.resolve,f.reject)}).catch(f.reject),f.promise}},{key:"register",value:function(a,b,c){c=c||{},c.acknowledge=!0,this.log.info("REGISTER",{procedure:a,endpoint:b,options:c});var e=this.defer();return this.sessionPromise.then(function(d){return d.register(a,b,c).then(e.resolve,e.reject)}).catch(e.reject),e.promise}},{key:"subscribe",value:function(a,b,c){c=c||{},this.log.info("SUBSCRIBE",{topic:a,handler:b,options:c});var e=this.defer();return this.sessionPromise.then(function(d){return d.subscribe(a,b,c).then(e.resolve,e.reject)}).catch(e.reject),e.promise}},{key:"unregister",value:function(a){this.log.info("UNREGISTER",a);var b=this.defer();return this.sessionPromise.then(function(c){return c.unregister(a).then(b.resolve,b.reject)}).catch(b.reject),b.promise}},{key:"unsubscribe",value:function(a){this.log.info("UNSUBSCRIBE",a);var b=this.defer();return this.sessionPromise.then(function(c){return c.unsubscribe(a).then(b.resolve,b.reject)}).catch(b.reject),b.promise}},{key:"version",get:function(){return Ma.version}},{key:"log",get:function(){return this._vueWampCfg.debug?Ra:Qa}},{key:"sessionPromise",get:function(){var a=this.defer();return this.isOpen&&this.session?a.resolve(this.session):(this.open(),this._vueWampQRes.push(a.resolve),this._vueWampQRej.push(a.reject)),a.promise}}]),b}(b.Connection),Ua=function(a,b){var c=new a,d=new Ta(b,c);a.Wamp=d,Object.defineProperties(a.prototype,{$wamp:{get:function(){return this._vueWampWithContext||(this._vueWampWithContext=d.withContext(this)),this._vueWampWithContext}}}),a.mixin({data:function(){return{wampIsConnected:!1,wampIsOpen:!1,wampIsRetrying:!1}},created:function(){var a=this;if(this===this.$root&&(c.$on("status",function(b){a.wampIsConnected=b.status.isConnected,a.wampIsOpen=b.status.isOpen,a.wampIsRetrying=b.status.isRetrying,a.$emit("$wamp.status",b)}),c.$on("opened",function(b){return a.$emit("$wamp.opened",b)}),c.$on("closed",function(b){return a.$emit("$wamp.closed",b)}),c.$on("retrying",function(b){return a.$emit("$wamp.retrying",b)}),c.$on("reconnected",function(b){return a.$emit("$wamp.reconnected",b)})),!!this.$options.wamp){var b=["subscribe","register"],e=this.$options.wamp,f=function(c){c=b[c];var f=e[c],h=function(b){if(!f.hasOwnProperty(b))return"continue";var e=f[b],g=void 0,h={acknowledge:!0};if("function"==typeof e?g=e:(g=e.handler,h=Object.assign(h,e),delete h.handler),"function"!=typeof e)throw"vue-wamp handler must be callable";a.$wamp[c](b,g.bind(a),h).then(function(a){return d.log.info("Component option: "+c+" "+b,a)}).catch(d.log.error)};for(var i in f){var j=h(i)}g=c};for(var g in b)f(g)}},beforeDestroy:function(){this.$wamp.destroy()}})};module.exports=Ua;
-//# sourceMappingURL=vue-wamp.cjs.js.map
+ */
+
+'use strict';
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var autobahn = _interopDefault(require('autobahn'));
+
+class Persist {
+
+  constructor(connection) {
+    this._con = connection;
+    this._reconnectors = [];
+    this._subscriptions = [];
+    this._registrations = [];
+  }
+
+  subscribe(topic, handler, options) {
+    options = options || {};
+    options.acknowledge = true;
+    this._reconnectors.push(() => {
+      this._con.subscribe(topic, handler, options)
+        .then((subscription) => this._subscriptions.push(subscription))
+        .catch(console.error);
+    });
+  }
+
+  register(procedure, endpoint, options) {
+    options = options || {};
+    options.acknowledge = true;
+    this._reconnectors.push(() => {
+      this._con.register(procedure, endpoint, options)
+        .then((registration) => this._registrations.push(registration))
+        .catch(console.error);
+    });
+  }
+
+  unsubscribe(subscription) {
+    for(let i in this._subscriptions) {
+      if(!this._subscriptions.hasOwnProperty(i)) {
+        continue;
+      }
+      const s = this._subscriptions[i];
+      if(s === subscription) {
+        this._subscriptions = this._subscriptions.splice(i, 1);
+      }
+    }
+  }
+
+  unregister(registration) {
+    for(let i in this._registrations) {
+      if(!this._registrations.hasOwnProperty(i)) {
+        continue;
+      }
+      const r = this._registrations[i];
+      if(r === registration) {
+        this._registrations = this._registrations.splice(i, 1);
+      }
+    }
+  }
+
+  clear() {
+    this._reconnectors = [];
+  }
+
+  reconnected() {
+    for(let i in this._reconnectors) {
+      const r = this._reconnectors[i];
+      r();
+    }
+  }
+
+  closed() {
+    while(this._subscriptions.length > 0) {
+      const s = this._subscriptions.shift();
+      this._con.unsubscribe(s).catch(() => {});
+    }
+    while(this._registrations.length >0) {
+      const r = this._registrations.shift();
+      this._con.unregister(r).catch(() => {});
+    }
+  }
+
+}
+
+class ConnectionContext  {
+
+  constructor(connection, context, events) {
+    this._con = connection;
+    this._ctx = context;
+    this._persist = new Persist(connection, events);
+    events.$on('reconnected', () => {
+      this._persist.reconnected();
+    });
+    events.$on('closed', () => {
+      this.closed();
+      this._persist.closed();
+    });
+    this._subscriptions = [];
+    this._registrations = [];
+  }
+
+  get isConnected() {
+    return this._con.isConnected;
+  }
+
+  get isOpen() {
+    return this._con.isOpen;
+  }
+
+  get isRetrying() {
+    return this._con.isRetrying;
+  }
+
+  open() {
+    return this._con.open();
+  }
+
+  close(reason, message) {
+    return this._con.close(reason, message);
+  }
+
+  call(procedure, args, kwargs, options) {
+    return this._con.call(procedure, args, kwargs, options)
+  }
+
+  subscribe(topic, handler, options) {
+    options = options || {};
+    options.acknowledge = true;
+    const d = this._con.defer();
+    this._con.subscribe(topic, handler, options)
+      .then(subscription => {
+        this._subscriptions.push(subscription);
+        d.resolve(subscription);
+      }, d.reject)
+    ;
+    this._persist.subscribe(topic, handler, options);
+    return d.promise;
+  }
+
+  register(procedure, endpoint, options) {
+    options = options || {};
+    options.acknowledge = true;
+    const d = this._con.defer();
+    this._con.register(procedure, endpoint, options)
+      .then(registration => {
+        this._registrations.push(registration);
+        d.resolve(registration);
+      }, d.reject)
+    ;
+    this._persist.register(procedure, endpoint, options);
+    return d.promise;
+  }
+
+  publish(topic, args, kwargs, options) {
+    return this._con.publish(topic, args, kwargs, options);
+  }
+
+  unsubscribe(subscription) {
+    for(let i in this._subscriptions) {
+      if(!this._subscriptions.hasOwnProperty(i)) {
+        continue;
+      }
+      const s = this._subscriptions[i];
+      if(s === subscription) {
+        this._subscriptions = this._subscriptions.splice(i, 1);
+      }
+    }
+    this._persist.unsubscribe(subscription);
+    return this._con.unsubscribe(subscription);
+  }
+
+  unregister(registration) {
+    for(let i in this._registrations) {
+      if(!this._registrations.hasOwnProperty(i)) {
+        continue;
+      }
+      const r = this._registrations[i];
+      if(r === registration) {
+        this._registrations = this._registrations.splice(i, 1);
+      }
+    }
+    this._persist.unregister(registration);
+    return this._con.unregister(registration);
+  }
+
+  closed() {
+    while(this._subscriptions.length > 0) {
+      const s = this._subscriptions.shift();
+      this._con.unsubscribe(s).catch(() => {});
+    }
+    while(this._registrations.length >0) {
+      const r = this._registrations.shift();
+      this._con.unregister(r).catch(() => {});
+    }
+  }
+
+  destroy() {
+    this.closed();
+    this._persist.closed();
+    this._persist.clear();
+  }
+
+}
+
+const logPrefix = '[vue-wamp]';
+
+const dummyConsole = {
+  log: () => {
+  },
+  info: () => {
+  },
+  warn: () => {
+  },
+  error: () => {
+  },
+};
+
+const debugConsole = {
+  log: (...a) => {
+    console.log(logPrefix, ...a);
+  },
+  info: (...a) => {
+    console.info(logPrefix, ...a);
+  },
+  warn: (...a) => {
+    console.warn(logPrefix, ...a);
+  },
+  error: (...a) => {
+    console.error(logPrefix, ...a);
+  },
+};
+
+const defaultConfig = {
+  debug: false,
+};
+
+class Connection extends autobahn.Connection {
+
+  constructor(config, events) {
+    config = Object.assign({}, defaultConfig, config);
+    super(config);
+
+    // plugin events
+    this._vueWampEvents = events;
+    // plugin config
+    this._vueWampCfg = config;
+    // session promise resolve queue
+    this._vueWampQRes = [];
+    // session promise reject queue
+    this._vueWampQRej = [];
+
+    let _lastStatus = {
+      isConnected: false,
+      isOpen: false,
+      isRetrying: false,
+    };
+
+    const _statusUpdate = (details) => {
+      const status = {
+        isConnected: this.isConnected,
+        isOpen: this.isOpen,
+        isRetrying: this.isRetrying,
+      };
+      const e = {status, lastStatus: _lastStatus, details};
+      this.log.info('Status emit', e);
+      events.$emit('status', e);
+      if(status.isOpen && !_lastStatus.isOpen) {
+        events.$emit('opened', e);
+        if(!status.isRetrying && _lastStatus.isRetrying) {
+          events.$emit('reconnected', e);
+        }
+      }
+      else if(!status.isOpen && _lastStatus.isOpen) {
+        events.$emit('closed', e);
+      }
+      if(status.isRetrying && !_lastStatus.isRetrying) {
+        events.$emit('retrying', e);
+      }
+      _lastStatus = status;
+    };
+
+    this.onopen = (session, details) => {
+      this.log.info('Connection opened', {session, details});
+      _statusUpdate(details);
+      const l = this._vueWampQRes.length;
+      while (this._vueWampQRes.length > 0) {
+        let resolve = this._vueWampQRes.shift();
+        resolve(session);
+      }
+      this.log.info('Sessions resolved:', l);
+      this._vueWampQRej = [];
+      if(config.hasOwnProperty('onopen') && typeof config.onopen === "function") {
+        config.onopen(session, details);
+      }
+    };
+
+    this.onclose = (reason, details) => {
+      this.log.info('Connection closed', {reason, details});
+      let stop = false;
+      if(!details.will_retry) {
+        this._autoreconnect_reset();
+        stop = true;
+      }
+      _statusUpdate(details);
+      const l = this._vueWampQRej.length;
+      while (this._vueWampQRej.length > 0) {
+        let reject = this._vueWampQRej.shift();
+        reject({reason, details});
+      }
+      this.log.info('Sessions rejected:', l);
+      this._vueWampQRes = [];
+      if(config.hasOwnProperty('onclose') && typeof config.onclose === "function") {
+        config.onclose(session, details);
+      }
+      return stop;
+    };
+
+    this.log.info('Connection create', {Connection: this});
+    _statusUpdate(null);
+  }
+
+  get log() {
+    return this._vueWampCfg.debug ? debugConsole : dummyConsole
+  }
+
+  // get isClosed() {
+  //   return !(this.isConnected || this.isOpen || this.isRetrying)
+  // }
+
+  get sessionPromise() {
+    const d = this.defer();
+    if (this.isOpen && this.session) {
+      d.resolve(this.session);
+    }
+    else {
+      this.open();
+      this._vueWampQRes.push(d.resolve);
+      this._vueWampQRej.push(d.reject);
+    }
+    return d.promise;
+  }
+
+  withContext(context) {
+    return new ConnectionContext(this, context, this._vueWampEvents)
+  }
+
+  open() {
+    this.log.info('Connection open', {Connection: this});
+    super.open();
+  }
+
+  close(reason, message) {
+    this.log.info('Connection close', {Connection: this, reason, message});
+    super.close(reason, message);
+  }
+
+  reconnect() {
+    this.close('wamp.goodbye.reconnect');
+    this.open();
+  }
+
+  call(procedure, args, kwargs, options) {
+    args = args || [];
+    kwargs = kwargs || {};
+    options = options || {};
+    this.log.info('CALL', {procedure, args, kwargs, options});
+    const d = this.defer();
+    this.sessionPromise
+      .then(session => session.call(procedure, args, kwargs, options).then(d.resolve, d.reject, d.notify))
+      .catch(d.reject);
+    return d.promise;
+  }
+
+  publish(topic, args, kwargs, options) {
+    args = args || [];
+    kwargs = kwargs || {};
+    options = options || {};
+    options.acknowledge = true;
+    this.log.info('PUBLISH', {topic, args, kwargs, options});
+    const d = this.defer();
+    this.sessionPromise
+      .then(session => session.publish(topic, args, kwargs, options).then(d.resolve, d.reject))
+      .catch(d.reject);
+    return d.promise;
+  }
+
+  register(procedure, endpoint, options) {
+    options = options || {};
+    options.acknowledge = true;
+    this.log.info('REGISTER', {procedure, endpoint, options});
+    const d = this.defer();
+    this.sessionPromise
+      .then(session => session.register(procedure, endpoint, options).then(d.resolve, d.reject))
+      .catch(d.reject)
+    ;
+    return d.promise;
+  }
+
+  subscribe(topic, handler, options) {
+    options = options || {};
+    this.log.info('SUBSCRIBE', {topic, handler, options});
+    const d = this.defer();
+    this.sessionPromise
+      .then(session =>
+        session.subscribe(topic, handler, options).then(d.resolve, d.reject)
+      )
+      .catch(d.reject);
+    return d.promise;
+  }
+
+  unregister(registration) {
+    this.log.info('UNREGISTER', registration);
+    const d = this.defer();
+    this.sessionPromise
+      .then(session =>
+        session.unregister(registration).then(d.resolve, d.reject)
+      )
+      .catch(d.reject);
+    return d.promise;
+  }
+
+  unsubscribe(subscription) {
+    this.log.info('UNSUBSCRIBE', subscription);
+    const d = this.defer();
+    this.sessionPromise
+      .then(session =>
+        session.unsubscribe(subscription).then(d.resolve, d.reject)
+      )
+      .catch(d.reject);
+    return d.promise;
+  }
+}
+
+var index = (Vue, options) => {
+
+  const events = new Vue();
+
+  const C = new Connection(options, events);
+
+  // Expose through global property
+  Vue.Wamp = C;
+
+  // Expose through vm property
+  Object.defineProperties(Vue.prototype, {
+    '$wamp': {
+      get() {
+        if(!this._vueWampWithContext) {
+          this._vueWampWithContext = C.withContext(this);
+        }
+        return this._vueWampWithContext;
+      }
+    }
+  });
+
+  // Expose through vm options
+  Vue.mixin({
+    data() {
+      return {
+        wampIsConnected: false,
+        wampIsOpen: false,
+        wampIsRetrying: false,
+      }
+    },
+    created() {
+
+      if (this === this.$root) {
+        events.$on('status', (e) => {
+          this.wampIsConnected = e.status.isConnected;
+          this.wampIsOpen = e.status.isOpen;
+          this.wampIsRetrying = e.status.isRetrying;
+          this.$emit('$wamp.status', e);
+        });
+        events.$on('opened', (e) => this.$emit('$wamp.opened', e));
+        events.$on('closed', (e) => this.$emit('$wamp.closed', e));
+        events.$on('retrying', (e) => this.$emit('$wamp.retrying', e));
+        events.$on('reconnected', (e) => this.$emit('$wamp.reconnected', e));
+      }
+
+      if (!this.$options.wamp)
+        return;
+
+      // exposing only these two makes any sense
+      const validKeys = ['subscribe', 'register'];
+
+      const $o = this.$options.wamp;
+
+      // loop topics/procedures
+      for (let type in validKeys) {
+        type = validKeys[type];
+        const t = $o[type];
+
+        // loop topic/procedure names
+        for (let name in t) {
+          if (!t.hasOwnProperty(name))
+            continue;
+
+          const o = t[name];
+          let handler;
+          let options = {
+            acknowledge: true,
+          };
+
+          if (typeof o === 'function') {
+            // no options
+            handler = o;
+          }
+          else {
+            // user options
+            handler = o.handler;
+            options = Object.assign(options, o);
+            delete options.handler;
+          }
+          if (typeof o !== 'function') {
+            throw 'vue-wamp handler must be callable'
+          }
+
+          // do it!
+          this.$wamp[type](name, handler.bind(this), options)
+            .then(r => C.log.info('Component option: ' + type + ' ' + name, r))
+            .catch(C.log.error)
+          ;
+        }
+      }
+    },
+    beforeDestroy() {
+      this.$wamp.destroy();
+    }
+  });
+
+};
+
+module.exports = index;
