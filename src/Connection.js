@@ -111,7 +111,7 @@ class Connection extends autobahn.Connection {
       this.log.info('Sessions rejected:', l);
       this._vueWampQRes = [];
       if(config.hasOwnProperty('onclose') && typeof config.onclose === "function") {
-        config.onclose(session, details);
+        config.onclose(reason, details);
       }
       return stop;
     };
