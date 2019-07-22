@@ -1,5 +1,5 @@
 /*!
- * vue-wamp v2.0.5
+ * vue-wamp v2.0.6
  * https://github.com/lajosbencz/vue-wamp#readme
  * Released under the MIT License.
  */
@@ -311,7 +311,7 @@ class Connection extends autobahn.Connection {
       this.log.info('Sessions rejected:', l);
       this._vueWampQRes = [];
       if(config.hasOwnProperty('onclose') && typeof config.onclose === "function") {
-        config.onclose(session, details);
+        config.onclose(reason, details);
       }
       return stop;
     };
