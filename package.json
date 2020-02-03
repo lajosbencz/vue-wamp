@@ -1,56 +1,84 @@
 {
   "name": "vue-wamp",
-  "version": "2.1.0",
+  "version": "3.0.0-rc0",
   "description": "WAMP protocol wrapper library for Vue",
+  "license": "MIT",
+  "author": "Lajos Bencz <lazos@lazos.me>",
   "private": false,
-  "main": "dist/vue-wamp.cjs.js",
-  "module": "dist/vue-wamp.esm.js",
-  "browser": "dist/vue-wamp.js",
-  "jsdelivr": "dist/vue-wamp.min.js",
-  "scripts": {
-    "build": "npm run build:main && npm run build:module && npm run build:browser",
-    "build:main": "node build/cjs.js",
-    "build:module": "node build/esm.js",
-    "build:browser": "node build/umd.js",
-    "example:router": "cd example/router && crossbar start",
-    "example:server": "node example/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lajosbencz/vue-wamp"
-  },
+  "homepage": "https://github.com/lajosbencz/vue-wamp#readme",
   "keywords": [
     "vue",
     "wamp",
     "autobahn",
     "websocket"
   ],
-  "author": "Lajos Bencz <lazos@lazos.me>",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lajosbencz/vue-wamp"
+  },
   "bugs": {
     "url": "https://github.com/lajosbencz/vue-wamp/issues"
   },
-  "homepage": "https://github.com/lajosbencz/vue-wamp#readme",
-  "peerDependencies": {
-    "autobahn": "*",
-    "vue": "*"
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "browser": {
+    "./dist/cjs/index.js": "./dist/umd/index.js",
+    "./dist/esm/index.js": "./dist/esm/index.js"
+  },
+  "unpkg": "dist/umd/index.min.js",
+  "jsdelivr": "dist/umd/index.min.js",
+  "typings": "dist/types/index.d.ts",
+  "types": "dist/types/index.d.ts",
+  "scripts": {
+    "doc:clean": "rimraf docs",
+    "postdoc:clean": "mkdirp docs",
+    "predoc": "npm run doc:clean",
+    "doc": "typedoc --ignoreCompilerErrors --mode modules --name vuex-persist --out docs src",
+    "postdoc": "nodetouch docs/.nojekyll",
+    "prebuild": "rimraf dist .rpt2_cache",
+    "build": "rollup -c build/rollup.config.js",
+    "prepublishOnly": "npm run build",
+    "pretest": "npm run build",
+    "test": "cd test && mocha -r ts-node/register *.ts",
+    "test:dirty": "cd test && mocha -r ts-node/register *.ts",
+    "cover": "nyc npm test"
+  },
+  "nyc": {
+    "extension": [
+      "ts"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ]
   },
   "devDependencies": {
-    "@babel/plugin-external-helpers": "^7.2.0",
-    "@babel/plugin-transform-parameters": "^7.4.4",
-    "@babel/polyfill": "^7.4.4",
-    "@babel/preset-env": "^7.5.5",
-    "autobahn": "^18.10.2",
-    "rollup": "^1.17.0",
-    "rollup-plugin-babel": "^4.3.3",
-    "rollup-plugin-babel-minify": "^7.0.0",
-    "rollup-plugin-commonjs": "^9.3.4",
-    "rollup-plugin-json": "^3.1.0",
-    "rollup-plugin-node-resolve": "^4.2.4",
-    "rollup-plugin-replace": "^2.2.0"
+    "@types/chai": "^4.1.4",
+    "@types/lodash.merge": "^4.6.4",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.1.2",
+    "localforage": "^1.7.2",
+    "mkdirp": "^0.5.1",
+    "mocha": "^6.2.2",
+    "nyc": "^14.1.1",
+    "rimraf": "^3.0.0",
+    "rollup": "^1.27.4",
+    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-typescript2": "^0.25.2",
+    "rollup-plugin-uglify": "^6.0.3",
+    "touch": "^3.1.0",
+    "ts-node": "^8.5.2",
+    "typedoc": "^0.15.3",
+    "typescript": "^3.0.3",
+    "vue": "^2.5.17"
   },
   "dependencies": {
-    "core-js": "^2.6.9"
+    "ws": "^7.2.1",
+    "autobahn": "^20.1.1",
+    "flatted": "^2.0.0",
+    "lodash.merge": "^4.6.2"
+  },
+  "peerDependencies": {
+    "vuex": ">=2.5"
   }
 }

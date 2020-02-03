@@ -1,0 +1,26 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "rules": {
+    "semicolon": [
+      true,
+      "never"
+    ],
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "interface-name": false,
+    "max-classes-per-file": [
+      false
+    ],
+    "trailing-comma": false,
+    "object-literal-sort-keys": false,
+    "ordered-imports": true,
+    "no-string-literal": false,
+    "no-console": false
+  },
+  "rulesDirectory": []
+}
