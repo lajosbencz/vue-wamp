@@ -56,6 +56,7 @@
     "@types/chai": "^4.1.4",
     "@types/lodash.merge": "^4.6.4",
     "@types/mocha": "^5.2.5",
+    "@types/autobahn": "^18.10.0",
     "chai": "^4.1.2",
     "localforage": "^1.7.2",
     "mkdirp": "^0.5.1",
@@ -74,7 +75,7 @@
   },
   "dependencies": {
     "ws": "^7.2.1",
-    "autobahn": "^20.1.1",
+    "autobahn": "^18.10.2",
     "flatted": "^2.0.0",
     "lodash.merge": "^4.6.2"
   },
