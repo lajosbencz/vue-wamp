@@ -2,7 +2,7 @@
 
 import Connection from './Connection';
 import Context from './Context';
-import eventify from './eventify'
+import eventify from './eventify';
 
 const defaultOptions = {
   namespace: 'wamp',
