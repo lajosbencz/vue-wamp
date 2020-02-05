@@ -8,13 +8,14 @@ import autobahn, {Registration, Subscription} from 'autobahn';
 /**
  * @param {Context} ctx
  * @param {string} type
- * @param {any} what
+ * @param {string} name
+ * @param {any|autobahn.Subscription|autobahn.Registration} what
  */
-function remove(ctx, type, what) {
-  const obj = ctx._registry[type];
+function remove(ctx, type, name, what) {
+  const obj = ctx[type][name];
   const topic = Object.keys(obj).find((key) => obj[key] === what);
   if (topic) {
-    delete ctx._registry[type][topic];
+    delete ctx[type][name][topic];
   }
 }
 
@@ -33,12 +34,39 @@ export default class Context {
       subscribe: {},
       register: {},
     };
+    this._definitions = {
+      subscribe: {},
+      register: {},
+    };
+    this._resumer = async () => {
+      await this.resume();
+    };
+    this._connection.on('open', this._resumer);
+  }
+
+  /**
+   * @return {When.Promise|void}
+   */
+  async resume() {
+    if (!this._connection.isOpen ||
+      !this._connection._options.auto_reestablish) {
+      return;
+    }
+    const wait = [];
+    for (const sub of this._definitions.subscribe) {
+      wait.push(this.subscribe(sub.topic, sub.handler, sub.options));
+    }
+    for (const reg of this._definitions.register) {
+      wait.push(this.subscribe(reg.procedure, reg.endpoint, reg.options));
+    }
+    await Promise.all(wait);
   }
 
   /**
    * @return {When.Promise}
    */
   async destroy() {
+    this._connection.off('open', this._resumer);
     const wait = [];
     Object.values(this._registry.register).forEach((topic) => {
       wait.push(this.unregister(topic));
@@ -75,8 +103,14 @@ export default class Context {
    * @param {object} options
    * @return {Q.Promise<Registration|Subscription>}
    */
-  register(procedure, endpoint, options = {}) {
+  async register(procedure, endpoint, options = {}) {
     const d = this._connection.defer();
+    if (this._registry.register[procedure]) {
+      await this.unregister(this._registry.register[procedure]);
+    }
+    if (this._connection._options.auto_reestablish) {
+      this._definitions.register[procedure] = {procedure, endpoint, options};
+    }
     this._connection.register(procedure, endpoint, options).then((r) => {
       this._registry.register[procedure] = r;
       d.resolve(r);
@@ -89,7 +123,10 @@ export default class Context {
    * @return {When.Promise}
    */
   unregister(registration) {
-    remove(this, 'register', registration);
+    remove(this, '_registry', 'register', registration);
+    if (this._connection._options.auto_reestablish) {
+      remove(this, '_definitions', 'register', registration);
+    }
     return this._connection.unregister(registration);
   }
 
@@ -114,8 +151,14 @@ export default class Context {
    * @param {object} options
    * @return {When.Promise}
    */
-  subscribe(topic, handler, options = {}) {
+  async subscribe(topic, handler, options = {}) {
     const d = this._connection.defer();
+    if (this._registry.subscribe[topic]) {
+      await this.unsubscribe(this._registry.subscribe[topic]);
+    }
+    if (this._connection._options.auto_reestablish) {
+      this._definitions.subscribe[topic] = {topic, handler, options};
+    }
     this._connection.subscribe(topic, handler, options).then((s) => {
       this._registry.subscribe[topic] = s;
       d.resolve(s);
@@ -128,7 +171,10 @@ export default class Context {
    * @return {When.Promise}
    */
   unsubscribe(subscription) {
-    remove(this, 'subscribe', subscription);
+    remove(this, '_registry', 'subscribe', subscription);
+    if (this._connection._options.auto_reestablish) {
+      remove(this, '_definitions', 'subscribe', subscription);
+    }
     return this._connection.unsubscribe(subscription);
   }
 }
