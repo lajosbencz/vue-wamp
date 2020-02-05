@@ -24,7 +24,8 @@
   "scripts": {
     "lint": "npx eslint src/ test/",
     "lint:fix": "npx eslint --fix src/ test/",
-    "test": "jest --no-cache --config jest.config.js"
+    "test": "jest --no-cache --config jest.config.js",
+    "publish": "np"
   },
   "husky": {
     "hooks": {
