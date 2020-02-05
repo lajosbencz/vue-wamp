@@ -82,7 +82,7 @@ export default {
             if (typeof handler !== 'function') {
               throw new Error('handler must be callable');
             }
-            this[injectKey][type](name, handler.bind(this), options)
+            this['_wampConnectionContext'][type](name, handler.bind(this), options)
               .then(r => {
                 console.info(injectKey + ' ' + type + ': ' + name, r);
               })
@@ -92,8 +92,9 @@ export default {
         }
       },
       async beforeDestroy() {
-        if (this[injectKey]) {
-          await this[injectKey].destroy();
+        if (this['_wampConnectionContext']) {
+          await this['_wampConnectionContext'].destroy();
+          delete this['_wampConnectionContext'];
         }
       },
     });
