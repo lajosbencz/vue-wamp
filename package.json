@@ -50,7 +50,6 @@
   },
   "dependencies": {
     "autobahn": "^20",
-    "lodash": "^4.17.15",
     "when": "^3.7.8",
     "ws": "^7"
   },
