@@ -19,67 +19,37 @@
   "bugs": {
     "url": "https://github.com/lajosbencz/vue-wamp/issues"
   },
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "browser": {
-    "./dist/cjs/index.js": "./dist/umd/index.js",
-    "./dist/esm/index.js": "./dist/esm/index.js"
-  },
-  "unpkg": "dist/umd/index.min.js",
-  "jsdelivr": "dist/umd/index.min.js",
-  "typings": "dist/types/index.d.ts",
-  "types": "dist/types/index.d.ts",
+  "main": "src/index.js",
   "scripts": {
-    "doc:clean": "rimraf docs",
-    "postdoc:clean": "mkdirp docs",
-    "predoc": "npm run doc:clean",
-    "doc": "typedoc --ignoreCompilerErrors --mode modules --name vuex-persist --out docs src",
-    "postdoc": "nodetouch docs/.nojekyll",
-    "prebuild": "rimraf dist .rpt2_cache",
-    "build": "rollup -c build/rollup.config.js",
-    "prepublishOnly": "npm run build",
-    "pretest": "npm run build",
-    "test": "cd test && mocha -r ts-node/register *.ts",
-    "test:dirty": "cd test && mocha -r ts-node/register *.ts",
-    "cover": "nyc npm test"
+    "lint": "npx eslint src/ test/",
+    "lint:fix": "npx eslint --fix src/ test/",
+    "test": "jest --no-cache --config jest.config.js",
+    "build": "webpack -p",
+    "dev": "webpack --watch"
   },
-  "nyc": {
-    "extension": [
-      "ts"
-    ],
-    "reporter": [
-      "lcov",
-      "text-summary"
-    ]
+  "husky": {
+    "hooks": {
+      "pre-commit": "echo \"npm test\""
+    }
   },
   "devDependencies": {
-    "@types/chai": "^4.1.4",
-    "@types/lodash.merge": "^4.6.4",
-    "@types/mocha": "^5.2.5",
-    "@types/autobahn": "^18.10.0",
-    "chai": "^4.1.2",
-    "localforage": "^1.7.2",
-    "mkdirp": "^0.5.1",
-    "mocha": "^6.2.2",
-    "nyc": "^14.1.1",
-    "rimraf": "^3.0.0",
-    "rollup": "^1.27.4",
-    "rollup-plugin-replace": "^2.0.0",
-    "rollup-plugin-typescript2": "^0.25.2",
-    "rollup-plugin-uglify": "^6.0.3",
-    "touch": "^3.1.0",
-    "ts-node": "^8.5.2",
-    "typedoc": "^0.15.3",
-    "typescript": "^3.0.3",
-    "vue": "^2.5.17"
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@vue/test-utils": "latest",
+    "babel-jest": "^25.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-vue": "^6.1.2",
+    "husky": "^4.2.1",
+    "jest": "^25.1.0"
   },
   "dependencies": {
-    "ws": "^7.2.1",
-    "autobahn": "^18.10.2",
-    "flatted": "^2.0.0",
-    "lodash.merge": "^4.6.2"
+    "when": "^3.7.8",
+    "ws": "^7",
+    "autobahn": "^20"
   },
   "peerDependencies": {
-    "vuex": ">=2.5"
+    "vue": "^2"
   }
 }
