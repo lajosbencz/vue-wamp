@@ -31,7 +31,7 @@ export default function eventify(obj, namespace = '_eventifyEvents') {
       return;
     }
     if (listener) {
-      const i = obj[namespace][event].findIndex(l => l === listener);
+      const i = obj[namespace][event].findIndex((l) => l === listener);
       if (i >= 0) {
         obj[namespace][event].splice(i, 1);
       }

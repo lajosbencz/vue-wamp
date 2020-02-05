@@ -1,7 +1,6 @@
 import eventify from '../src/eventify';
 
 describe('eventify', () => {
-
   const obj = {};
   eventify(obj);
 
@@ -80,5 +79,4 @@ describe('eventify', () => {
     obj.emit('h');
     expect(n).toBe(2);
   });
-
 });

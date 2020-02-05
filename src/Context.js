@@ -53,7 +53,7 @@ export default class Context {
   }
 
   /**
-   * @returns {Connection}
+   * @return {Connection}
    */
   getConnection() {
     return this._connection;
