@@ -5,8 +5,6 @@ import Vue from 'vue';
 // eslint-disable-next-line no-unused-vars
 import autobahn, {Registration, Subscription} from 'autobahn';
 
-let _instanceCount = 0;
-
 /**
  * @param {Context} ctx
  * @param {string} type
@@ -30,8 +28,6 @@ export default class Context {
    * @param {Vue} vm
    */
   constructor(connection, vm) {
-    _instanceCount++;
-    console.log({_instanceCount, uid: vm._uid});
     this._connection = connection;
     this._vm = vm;
     this._registry = {
@@ -60,7 +56,6 @@ export default class Context {
    * @return {When.Promise|void}
    */
   async resume() {
-    return;
     if (!this._connection.isOpen ||
       !this._connection._options.auto_reestablish) {
       return;
@@ -226,7 +221,6 @@ export default class Context {
       await this.unsubscribe(this._registry.subscribe[topic]);
     }
     this._connection.subscribe(topic, handler, options).then((s) => {
-      console.log({vm: this._vm, sub: s});
       this._registry.subscribe[topic] = s;
       d.resolve(s);
     }, d.reject);

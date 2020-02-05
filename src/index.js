@@ -45,7 +45,6 @@ export default {
           if (!this['_wampConnectionContext']) {
             this['_wampConnectionContext'] = new Context(con, this);
           }
-          console.log('$wamp access', {vm: this._uid, con});
           return this['_wampConnectionContext'];
         },
       },
