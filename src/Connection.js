@@ -1,12 +1,6 @@
 // eslint-disable-next-line
-import When from 'when'
+import When from 'when';
 import autobahn from 'autobahn';
-
-const defaultOptions = {
-  namespace: 'wamp',
-  auto_reestablish: true,
-  auto_close_timeout: 0,
-};
 
 /**
  * @param {Connection} connection
@@ -52,9 +46,11 @@ function debounceClose(connection, timeout = 0) {
   if (connection._wampCloseTimeout) {
     clearTimeout(connection._wampCloseTimeout);
   }
-  connection._wampCloseTimeout = setTimeout(() => {
-    connection.close();
-  }, timeout);
+  if (timeout > 0) {
+    connection._wampCloseTimeout = setTimeout(() => {
+      connection.close();
+    }, timeout);
+  }
 }
 
 /**
@@ -62,10 +58,9 @@ function debounceClose(connection, timeout = 0) {
  */
 export default class Connection extends autobahn.Connection {
   /**
-   * @param {object} [options]
+   * @param {object} options
    */
-  constructor(options = {}) {
-    options = {...defaultOptions, ...options};
+  constructor(options) {
     super(options);
 
     this._wampSessionDefer = null;
