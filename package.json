@@ -42,7 +42,11 @@
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-vue": "^6.1.2",
     "husky": "^4.2.1",
-    "jest": "^25.1.0"
+    "jest": "^25.1.0",
+    "vue": "^2",
+    "vue-template-compiler": "^2.6.11",
+    "fastify": "^2.11.0",
+    "fastify-wamp-router": "^0.4.0"
   },
   "dependencies": {
     "autobahn": "^20",

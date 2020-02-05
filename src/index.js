@@ -2,7 +2,6 @@
 
 import Connection from './Connection';
 import Context from './Context';
-import eventify from './eventify';
 
 const defaultOptions = {
   namespace: 'wamp',
@@ -24,7 +23,6 @@ export default {
     this.installed = true;
 
     const con = new Connection(options);
-    eventify(con);
 
     Object.defineProperties(Vue, {
       // legacy global name
@@ -47,6 +45,7 @@ export default {
           if (!this['_wampConnectionContext']) {
             this['_wampConnectionContext'] = new Context(con, this);
           }
+          console.log('$wamp access', {vm: this._uid, con});
           return this['_wampConnectionContext'];
         },
       },

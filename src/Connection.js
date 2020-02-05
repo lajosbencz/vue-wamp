@@ -1,6 +1,7 @@
 // eslint-disable-next-line
 import When from 'when';
 import autobahn from 'autobahn';
+import eventify from './eventify';
 
 /**
  * @param {Connection} connection
@@ -62,6 +63,7 @@ class Connection extends autobahn.Connection {
    */
   constructor(options) {
     super(options);
+    eventify(this);
 
     this._wampSessionDefer = null;
     this._wampCloseTimeout = null;

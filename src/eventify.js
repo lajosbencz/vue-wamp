@@ -1,39 +1,48 @@
-import _ from 'lodash';
-
 /**
  * Extends object with EventEmitter methods
  * @param {Object} obj
+ * @param {String} [namespace]
  * @constructor
  */
-export default function eventify(obj) {
-  obj._events = {};
+export default function eventify(obj, namespace = '_eventifyEvents') {
+  obj[namespace] = {};
 
   obj.on = (event, listener) => {
-    if (_.isNil(obj._events[event])) {
-      obj._events[event] = [];
+    if (!obj[namespace].hasOwnProperty(event)) {
+      obj[namespace][event] = [];
     }
-    obj._events[event].push(listener);
+    obj[namespace][event].push(listener);
   };
 
   obj.emit = (event, ...args) => {
-    if (_.isNil(obj._events[event])) {
+    if (!obj[namespace].hasOwnProperty(event)) {
       return;
     }
-    _.forEach(obj._events[event], (listener) => {
+    obj[namespace][event].forEach((listener) => {
       listener.apply(obj, args);
     });
   };
 
   obj.off = (event, listener) => {
-    if (_.isNil(obj._events[event])) {
+    if (!event) {
+      obj[namespace] = {};
+    }
+    if (!obj[namespace].hasOwnProperty(event)) {
       return;
     }
-    _.pull(obj._events[event], listener);
+    if (listener) {
+      const i = obj[namespace][event].findIndex(l => l === listener);
+      if (i >= 0) {
+        obj[namespace][event].splice(i, 1);
+      }
+    } else {
+      delete obj[namespace][event];
+    }
   };
 
   obj.once = (event, listener) => {
     obj.on(event, function handler(...args) {
-      obj.removeListener(event, handler);
+      obj.off(event, handler);
       listener.apply(obj, args);
     });
   };
