@@ -2,15 +2,12 @@
 
 import Connection from './Connection';
 import Context from './Context';
+import eventify from './eventify'
 
 const defaultOptions = {
   namespace: 'wamp',
   auto_reestablish: true,
   auto_close_timeout: 0,
-};
-
-export {
-  defaultOptions,
 };
 
 export default {
@@ -27,6 +24,7 @@ export default {
     this.installed = true;
 
     const con = new Connection(options);
+    eventify(con);
 
     Object.defineProperties(Vue, {
       // legacy global name

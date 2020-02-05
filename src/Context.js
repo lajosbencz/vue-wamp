@@ -53,11 +53,17 @@ export default class Context {
       return;
     }
     const wait = [];
-    for (const sub of this._definitions.subscribe) {
-      wait.push(this.subscribe(sub.topic, sub.handler, sub.options));
+    for (const k in this._definitions.subscribe) {
+      if (this._definitions.subscribe.hasOwnProperty(k)) {
+        const sub = this._definitions.subscribe[k];
+        wait.push(this.subscribe(sub.topic, sub.handler, sub.options));
+      }
     }
-    for (const reg of this._definitions.register) {
-      wait.push(this.subscribe(reg.procedure, reg.endpoint, reg.options));
+    for (const k in this._definitions.register) {
+      if (this._definitions.register.hasOwnProperty(k)) {
+        const reg = this._definitions.register[k];
+        wait.push(this.subscribe(reg.procedure, reg.endpoint, reg.options));
+      }
     }
     await Promise.all(wait);
   }

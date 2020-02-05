@@ -45,9 +45,10 @@
     "jest": "^25.1.0"
   },
   "dependencies": {
+    "autobahn": "^20",
+    "lodash": "^4.17.15",
     "when": "^3.7.8",
-    "ws": "^7",
-    "autobahn": "^20"
+    "ws": "^7"
   },
   "peerDependencies": {
     "vue": "^2"

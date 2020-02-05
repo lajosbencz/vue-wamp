@@ -1,7 +1,6 @@
 // eslint-disable-next-line
 import When from 'when';
 import autobahn from 'autobahn';
-import emitter from 'emitter';
 
 /**
  * @param {Connection} connection
@@ -189,7 +188,5 @@ class Connection extends autobahn.Connection {
     return deferredSession(this, 'unsubscribe', [subscription]);
   }
 }
-
-emitter(Connection.prototype);
 
 export default Connection;
