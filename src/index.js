@@ -80,12 +80,7 @@ export default {
             if (typeof handler !== 'function') {
               throw new Error('handler must be callable');
             }
-            this[injectKey][type](name, handler.bind(this), options)
-              .then(r => {
-                console.info(injectKey + ' ' + type + ': ' + name, r);
-              })
-              .catch(console.error)
-            ;
+            this[injectKey][type](name, handler.bind(this), options).catch(console.error);
           }
         }
       },
