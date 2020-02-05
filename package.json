@@ -20,6 +20,7 @@
     "url": "https://github.com/lajosbencz/vue-wamp/issues"
   },
   "main": "src/index.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "lint": "npx eslint src/ test/",
     "lint:fix": "npx eslint --fix src/ test/",
