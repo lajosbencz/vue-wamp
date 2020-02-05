@@ -24,9 +24,7 @@
   "scripts": {
     "lint": "npx eslint src/ test/",
     "lint:fix": "npx eslint --fix src/ test/",
-    "test": "jest --no-cache --config jest.config.js",
-    "build": "webpack -p",
-    "dev": "webpack --watch"
+    "test": "jest --no-cache --config jest.config.js"
   },
   "husky": {
     "hooks": {
