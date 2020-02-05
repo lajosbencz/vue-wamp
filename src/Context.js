@@ -64,25 +64,21 @@ export default class Context {
     for (const k in this._definitions.subscribe) {
       if (this._definitions.subscribe.hasOwnProperty(k)) {
         const {topic, handler, options} = this._definitions.subscribe[k];
-        const d = this._connection.defer();
-        this._connection.subscribe(topic, handler, options).then((s) => {
-          this._registry.subscribe[topic] = s;
-          d.resolve(s);
-        }, d.reject);
-        wait.push(d.promise);
+        wait.push(this.subscribe(topic, handler, options));
       }
     }
     for (const k in this._definitions.register) {
       if (this._definitions.register.hasOwnProperty(k)) {
         const {procedure, endpoint, options} = this._definitions.register[k];
-        const d = this._connection.defer();
-        this._connection.register(procedure, endpoint, options).then((s) => {
-          this._registry.register[procedure] = s;
-          d.resolve(s);
-        }, d.reject);
-        wait.push(d.promise);
+        wait.push(this.register(procedure, endpoint, options));
       }
     }
+    console.log('resuming', {
+      vm: this._vm._uid,
+      definitions: this._definitions,
+      registry: this._registry,
+      wait,
+    });
     await Promise.all(wait);
   }
 
@@ -170,7 +166,11 @@ export default class Context {
       this._definitions.register[procedure] = {procedure, endpoint, options};
     }
     if (this._registry.register[procedure]) {
-      await this.unregister(this._registry.register[procedure]);
+      try {
+        await this._connection.unregister(this._registry.register[procedure]);
+      } catch (e) {
+      }
+      delete this._registry.register[procedure];
     }
     this._connection.register(procedure, endpoint, options).then((r) => {
       this._registry.register[procedure] = r;
@@ -218,7 +218,11 @@ export default class Context {
       this._definitions.subscribe[topic] = {topic, handler, options};
     }
     if (this._registry.subscribe[topic]) {
-      await this.unsubscribe(this._registry.subscribe[topic]);
+      try {
+        await this._connection.unsubscribe(this._registry.subscribe[topic]);
+      } catch (e) {
+      }
+      delete this._registry.subscribe[topic];
     }
     this._connection.subscribe(topic, handler, options).then((s) => {
       this._registry.subscribe[topic] = s;

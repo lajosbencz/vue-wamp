@@ -1,0 +1,12 @@
+{
+  "require": {
+    "voryx/thruway": "@stable",
+    "thruway/pawl-transport": "@stable",
+    "lajosbencz/cli-args": "^0.1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "NuxtWampBackend\\": "src/NuxtWampBackend/"
+    }
+  }
+}

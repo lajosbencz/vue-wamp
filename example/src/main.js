@@ -8,7 +8,7 @@ Vue.config.productionTip = false;
 import VueWamp from '../../src/index';
 
 Vue.use(VueWamp, {
-  url: 'ws://localhost:3443',
+  url: 'ws://localhost:4334',
   realm: 'realm1',
   onchallenge(session, method, extra) {
     console.log({session, method, extra});

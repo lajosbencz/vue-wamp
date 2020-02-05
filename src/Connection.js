@@ -10,6 +10,7 @@ import eventify from './eventify';
  * @return {When.Promise}
  */
 function deferredSession(connection, method, args = []) {
+  console.log({method, args});
   const d = connection.defer();
   debounceClose(connection, -1);
   connection.getSession().then((session) => {
@@ -65,16 +66,12 @@ class Connection extends autobahn.Connection {
     super(options);
     eventify(this);
 
-    this._wampSessionDefer = null;
+    this._wampSessionDefer = this.defer();
     this._wampCloseTimeout = null;
-
-    if (options.onchallenge) {
-      this.onchallenge = options.onchallenge;
-    }
 
     this.onopen = function(session, details) {
       if (this._wampSessionDefer) {
-        this._wampSessionDefer.resolve(session, details);
+        this._wampSessionDefer.resolve(session);
       }
       this.emit('open', session, details);
     };
@@ -83,7 +80,8 @@ class Connection extends autobahn.Connection {
       if (this._wampSessionDefer) {
         this._wampSessionDefer.reject(reason || 'closed', details);
       }
-      this._wampSessionDefer = null;
+      this._session = null;
+      this._wampSessionDefer = this.defer();
       this.emit('close', reason, details);
     };
   }
@@ -110,13 +108,11 @@ class Connection extends autobahn.Connection {
    * @return {When.Promise}
    */
   getSession() {
-    if (!this.session && !this._wampSessionDefer) {
+    if (!this._session) {
       setTimeout(() => this.open());
+      return this._wampSessionDefer.promise;
     }
-    if (!this._wampSessionDefer) {
-      this._wampSessionDefer = this.defer();
-    }
-    return this._wampSessionDefer.promise;
+    return When.Promise.resolve(this._session);
   }
 
   /**

@@ -8,10 +8,6 @@ export default {
       show: [true, true],
     };
   },
-  async created() {
-    const time = await this.$wamp.call('time');
-    console.log({time});
-  },
   methods: {
     toggle(n) {
       this.$set(this.show, n, !this.show[n]);
