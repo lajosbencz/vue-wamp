@@ -5,6 +5,8 @@ import Vue from 'vue';
 // eslint-disable-next-line no-unused-vars
 import autobahn, {Registration, Subscription} from 'autobahn';
 
+let _instanceCount = 0;
+
 /**
  * @param {Context} ctx
  * @param {string} type
@@ -28,6 +30,8 @@ export default class Context {
    * @param {Vue} vm
    */
   constructor(connection, vm) {
+    _instanceCount++;
+    console.log({_instanceCount, uid: vm._uid});
     this._connection = connection;
     this._vm = vm;
     this._registry = {
@@ -38,16 +42,25 @@ export default class Context {
       subscribe: {},
       register: {},
     };
+    this._shouldResume = false;
     this._resumer = async () => {
-      await this.resume();
+      if (this._shouldResume) {
+        await this.resume();
+      }
+      this._shouldResume = false;
+    };
+    this._closer = () => {
+      this._shouldResume = true;
     };
     this._connection.on('open', this._resumer);
+    this._connection.on('close', this._closer);
   }
 
   /**
    * @return {When.Promise|void}
    */
   async resume() {
+    return;
     if (!this._connection.isOpen ||
       !this._connection._options.auto_reestablish) {
       return;
@@ -55,14 +68,24 @@ export default class Context {
     const wait = [];
     for (const k in this._definitions.subscribe) {
       if (this._definitions.subscribe.hasOwnProperty(k)) {
-        const sub = this._definitions.subscribe[k];
-        wait.push(this.subscribe(sub.topic, sub.handler, sub.options));
+        const {topic, handler, options} = this._definitions.subscribe[k];
+        const d = this._connection.defer();
+        this._connection.subscribe(topic, handler, options).then((s) => {
+          this._registry.subscribe[topic] = s;
+          d.resolve(s);
+        }, d.reject);
+        wait.push(d.promise);
       }
     }
     for (const k in this._definitions.register) {
       if (this._definitions.register.hasOwnProperty(k)) {
-        const reg = this._definitions.register[k];
-        wait.push(this.subscribe(reg.procedure, reg.endpoint, reg.options));
+        const {procedure, endpoint, options} = this._definitions.register[k];
+        const d = this._connection.defer();
+        this._connection.register(procedure, endpoint, options).then((s) => {
+          this._registry.register[procedure] = s;
+          d.resolve(s);
+        }, d.reject);
+        wait.push(d.promise);
       }
     }
     await Promise.all(wait);
@@ -73,6 +96,7 @@ export default class Context {
    */
   async destroy() {
     this._connection.off('open', this._resumer);
+    this._connection.off('close', this._closer);
     const wait = [];
     Object.values(this._registry.register).forEach((topic) => {
       wait.push(this.unregister(topic));
@@ -147,11 +171,11 @@ export default class Context {
    */
   async register(procedure, endpoint, options = {}) {
     const d = this._connection.defer();
-    if (this._registry.register[procedure]) {
-      await this.unregister(this._registry.register[procedure]);
-    }
     if (this._connection._options.auto_reestablish) {
       this._definitions.register[procedure] = {procedure, endpoint, options};
+    }
+    if (this._registry.register[procedure]) {
+      await this.unregister(this._registry.register[procedure]);
     }
     this._connection.register(procedure, endpoint, options).then((r) => {
       this._registry.register[procedure] = r;
@@ -195,13 +219,14 @@ export default class Context {
    */
   async subscribe(topic, handler, options = {}) {
     const d = this._connection.defer();
-    if (this._registry.subscribe[topic]) {
-      await this.unsubscribe(this._registry.subscribe[topic]);
-    }
     if (this._connection._options.auto_reestablish) {
       this._definitions.subscribe[topic] = {topic, handler, options};
     }
+    if (this._registry.subscribe[topic]) {
+      await this.unsubscribe(this._registry.subscribe[topic]);
+    }
     this._connection.subscribe(topic, handler, options).then((s) => {
+      console.log({vm: this._vm, sub: s});
       this._registry.subscribe[topic] = s;
       d.resolve(s);
     }, d.reject);
