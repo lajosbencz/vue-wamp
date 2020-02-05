@@ -73,12 +73,6 @@ export default class Context {
         wait.push(this.register(procedure, endpoint, options));
       }
     }
-    console.log('resuming', {
-      vm: this._vm._uid,
-      definitions: this._definitions,
-      registry: this._registry,
-      wait,
-    });
     await Promise.all(wait);
   }
 

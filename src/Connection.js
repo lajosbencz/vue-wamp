@@ -10,7 +10,6 @@ import eventify from './eventify';
  * @return {When.Promise}
  */
 function deferredSession(connection, method, args = []) {
-  console.log({method, args});
   const d = connection.defer();
   debounceClose(connection, -1);
   connection.getSession().then((session) => {
