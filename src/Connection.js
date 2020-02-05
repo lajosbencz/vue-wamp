@@ -96,10 +96,12 @@ class Connection extends autobahn.Connection {
 
   /**
    * Safe close
+   * @param {string} [reason]
+   * @param {string} [message]
    */
-  close() {
+  close(reason, message) {
     if (this._transport || this._is_retrying) {
-      super.close();
+      super.close(reason || 'closed', message || '');
     }
   }
 

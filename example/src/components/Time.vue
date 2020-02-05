@@ -12,6 +12,7 @@ export default {
     },
   },
   created() {
+    this.$watch();
     // console.log(this.$wamp._vm);
     // this.$wamp.subscribe('time', (args, kwArgs, details) => {
     //   console.log({vm: this._uid, time: kwArgs.time});

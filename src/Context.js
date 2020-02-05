@@ -53,6 +53,13 @@ export default class Context {
   }
 
   /**
+   * @returns {Connection}
+   */
+  getConnection() {
+    return this._connection;
+  }
+
+  /**
    * @return {When.Promise|void}
    */
   async resume() {
