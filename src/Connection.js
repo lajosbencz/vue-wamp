@@ -1,6 +1,7 @@
 // eslint-disable-next-line
 import When from 'when';
 import autobahn from 'autobahn';
+import emitter from 'emitter';
 
 /**
  * @param {Connection} connection
@@ -56,7 +57,7 @@ function debounceClose(connection, timeout = 0) {
 /**
  * Exposes session methods on autobahn connection
  */
-export default class Connection extends autobahn.Connection {
+class Connection extends autobahn.Connection {
   /**
    * @param {object} options
    */
@@ -74,6 +75,7 @@ export default class Connection extends autobahn.Connection {
       if (this._wampSessionDefer) {
         this._wampSessionDefer.resolve(session, details);
       }
+      this.emit('open', session, details);
     };
 
     this.onclose = function(reason, details) {
@@ -81,6 +83,7 @@ export default class Connection extends autobahn.Connection {
         this._wampSessionDefer.reject(reason || 'closed', details);
       }
       this._wampSessionDefer = null;
+      this.emit('close', reason, details);
     };
   }
 
@@ -186,3 +189,7 @@ export default class Connection extends autobahn.Connection {
     return deferredSession(this, 'unsubscribe', [subscription]);
   }
 }
+
+emitter(Connection.prototype);
+
+export default Connection;
