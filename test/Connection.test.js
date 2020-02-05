@@ -25,7 +25,9 @@ describe('Connection', () => {
   it('should connect successfully', (done) => {
     con.getSession().then(session => {
       expect(con.session).toEqual(session);
-      con.on('close', done);
+      con.on('close', () => {
+        done();
+      });
       con.close();
     }, done);
     con.open();
