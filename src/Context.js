@@ -80,6 +80,42 @@ export default class Context {
   }
 
   /**
+   * @param {string} event
+   * @param {function} fn
+   * @return {Context}
+   */
+  on(event, fn) {
+    return this._connection.on(event, fn);
+  }
+
+  /**
+   * @param {string} event
+   * @param {function} fn
+   * @return {Context}
+   */
+  once(event, fn) {
+    return this._connection.once(event, fn);
+  }
+
+  /**
+   * @param {string} [event]
+   * @param {function} [fn]
+   * @return {Context}
+   */
+  off(event, fn) {
+    return this._connection.off(event, fn);
+  }
+
+  /**
+   * @param {string} event
+   * @param {any} [args]
+   * @return {Context}
+   */
+  emit(event, ...args) {
+    return this._connection.emit(event, ...args);
+  }
+
+  /**
    * @return {When.Promise}
    */
   getSession() {
