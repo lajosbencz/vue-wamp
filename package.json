@@ -1,6 +1,6 @@
 {
   "name": "vue-wamp",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "WAMP protocol wrapper library for Vue",
   "license": "MIT",
   "author": "Lajos Bencz <lazos@lazos.me>",
