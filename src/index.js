@@ -54,9 +54,9 @@ export default {
       data() {
         if (this === this.$root) {
           return {
-            wampIsConnected: false,
-            wampIsOpen: false,
-            wampIsRetrying: false,
+            [namespace + 'IsConnected']: false,
+            [namespace + 'IsOpen']: false,
+            [namespace + 'IsRetrying']: false,
           };
         } else {
           return {};
@@ -65,9 +65,9 @@ export default {
       beforeCreate() {
         if (this === this.$root) {
           con.on('status', (e) => {
-            this.wampIsConnected = e.status.isConnected;
-            this.wampIsOpen = e.status.isOpen;
-            this.wampIsRetrying = e.status.isRetrying;
+            this[namespace + 'IsConnected'] = e.status.isConnected;
+            this[namespace + 'IsOpen'] = e.status.isOpen;
+            this[namespace + 'IsRetrying'] = e.status.isRetrying;
             this.$emit('$wamp.status', e);
           });
           con.on('opened', (e) => this.$emit('$wamp.opened', e));
