@@ -2,12 +2,7 @@
 
 import Connection from './Connection';
 import Context from './Context';
-
-const defaultOptions = {
-  namespace: 'wamp',
-  auto_reestablish: true,
-  auto_close_timeout: 0,
-};
+import defaultOptions from './Options';
 
 export default {
   install(Vue, options) {

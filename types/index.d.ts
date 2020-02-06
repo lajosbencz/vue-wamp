@@ -1,13 +1,7 @@
 import Vue from 'vue';
 import Connection from "./Connection";
 import Context from "./Context";
-
-interface Options {
-    auto_reestablish?: boolean,
-    auto_close_timeout?: number,
-
-    [key: string]: any,
-}
+import Options from "./Options";
 
 declare module 'vue/types/vue' {
     interface VueConstructor {
