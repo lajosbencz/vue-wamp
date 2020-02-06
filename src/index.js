@@ -68,12 +68,12 @@ export default {
             this[namespace + 'IsConnected'] = e.status.isConnected;
             this[namespace + 'IsOpen'] = e.status.isOpen;
             this[namespace + 'IsRetrying'] = e.status.isRetrying;
-            this.$emit('$wamp.status', e);
+            this.$emit(injectKey + '.status', e);
           });
-          con.on('opened', (e) => this.$emit('$wamp.opened', e));
-          con.on('closed', (e) => this.$emit('$wamp.closed', e));
-          con.on('retrying', (e) => this.$emit('$wamp.retrying', e));
-          con.on('reconnected', (e) => this.$emit('$wamp.reconnected', e));
+          con.on('opened', (e) => this.$emit(injectKey + '.opened', e));
+          con.on('closed', (e) => this.$emit(injectKey + '.closed', e));
+          con.on('retrying', (e) => this.$emit(injectKey + '.retrying', e));
+          con.on('reconnected', (e) => this.$emit(injectKey + '.reconnected', e));
         }
         if (!this['$options'][namespace]) {
           return;
