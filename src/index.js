@@ -51,7 +51,30 @@ export default {
     });
 
     Vue.mixin({
+      data() {
+        if (this === this.$root) {
+          return {
+            wampIsConnected: false,
+            wampIsOpen: false,
+            wampIsRetrying: false,
+          };
+        } else {
+          return {};
+        }
+      },
       beforeCreate() {
+        if (this === this.$root) {
+          con.on('status', (e) => {
+            this.wampIsConnected = e.status.isConnected;
+            this.wampIsOpen = e.status.isOpen;
+            this.wampIsRetrying = e.status.isRetrying;
+            this.$emit('$wamp.status', e);
+          });
+          con.on('opened', (e) => this.$emit('$wamp.opened', e));
+          con.on('closed', (e) => this.$emit('$wamp.closed', e));
+          con.on('retrying', (e) => this.$emit('$wamp.retrying', e));
+          con.on('reconnected', (e) => this.$emit('$wamp.reconnected', e));
+        }
         if (!this['$options'][namespace]) {
           return;
         }

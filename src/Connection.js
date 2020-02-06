@@ -15,10 +15,10 @@ function deferredSession(connection, method, args = []) {
   connection.getSession().then((session) => {
     try {
       session[method](...args)
-          .then(d.resolve, d.reject, d.notify)
-          .finally(() => {
-            debounceClose(connection);
-          });
+        .then(d.resolve, d.reject, d.notify)
+        .finally(() => {
+          debounceClose(connection);
+        });
     } catch (e) {
       debounceClose(connection);
       d.reject(e);
@@ -68,11 +68,40 @@ class Connection extends autobahn.Connection {
     this._wampSessionDefer = this.defer();
     this._wampCloseTimeout = null;
 
+    let _lastStatus = {
+      isConnected: false,
+      isOpen: false,
+      isRetrying: false,
+    };
+
+    const _statusUpdate = (details) => {
+      const status = {
+        isConnected: this.isConnected,
+        isOpen: this.isOpen,
+        isRetrying: this.isRetrying,
+      };
+      const e = {status, lastStatus: _lastStatus, details};
+      this.emit('status', e);
+      if (status.isOpen && !_lastStatus.isOpen) {
+        this.emit('opened', e);
+        if (!status.isRetrying && _lastStatus.isRetrying) {
+          this.emit('reconnected', e);
+        }
+      } else if (!status.isOpen && _lastStatus.isOpen) {
+        this.emit('closed', e);
+      }
+      if (status.isRetrying && !_lastStatus.isRetrying) {
+        this.emit('retrying', e);
+      }
+      _lastStatus = status;
+    };
+
     this.onopen = function(session, details) {
       if (this._wampSessionDefer) {
         this._wampSessionDefer.resolve(session);
       }
       this.emit('open', session, details);
+      _statusUpdate(details);
     };
 
     this.onclose = function(reason, details) {
@@ -82,7 +111,10 @@ class Connection extends autobahn.Connection {
       this._session = null;
       this._wampSessionDefer = this.defer();
       this.emit('close', reason, details);
+      _statusUpdate(details);
     };
+
+    _statusUpdate(null);
   }
 
   /**
