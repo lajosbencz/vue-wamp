@@ -22,7 +22,7 @@ Since v3.0.0:
 * New config options:
   * ```namespace {string}```: The namespace for the plugin, default: ```wamp```
   * ```auto_reestablish {boolean}```: Automatically re-registers and re-subscribes after reconnection
-  * ```auto_close_timeout {number}```: Will close the WS connection after amount of idle seconds
+  * ```auto_close_timeout {number}```: Will close the WS connection after amount of idle milliseconds
 * Rudimentary TypeScript support 
 
 ## Installation
@@ -31,18 +31,6 @@ Since v3.0.0:
 npm install --save vue-wamp
 ```
 
-## Example
-
-```
-cd node_modules/vue-wamp
-npm run example
-```
-
-You will need to run two browser tabs to see the effects of example 1&2 (or more testers).
-WAMP router by courtesy of https://demo.crossbar.io/ws, please obey [their rules](http://crossbar.io/docs/Demo-Instance/) .
-
-Lately the demo router was unavailable, so i changed to config to connect to a local crossbar server instead.
-
 ## Configuration
 
 ```js
@@ -50,9 +38,15 @@ Lately the demo router was unavailable, so i changed to config to connect to a l
 import VueWamp from 'vue-wamp'
 
 Vue.use(VueWamp, {
-    debug: true, // Logs will be written to the console
     url: 'ws://demo.crossbar.io/ws',
     realm: 'realm1',
+
+    // change this in case of naming conflict
+    namespace: 'wamp',
+    // automatically re-registers and re-subscribes after reconnection (on by default)
+    auto_reestablish: true,
+    // automatically closes WS connection after amount of idle milliseconds (off by default)
+    auto_close_timeout: -1,
 });
 ```
 
@@ -131,11 +125,11 @@ export default {
 
 ## Static methods
 
-```Vue.Wamp.subscribe```, ```Vue.Wamp.publish```, ```Vue.Wamp.register```, ```Vue.Wamp.call```, ```Vue.Wamp.unsubscribe```, ```Vue.Wamp.unregister```
+```Vue.$wamp.subscribe```, ```Vue.$wamp.publish```, ```Vue.$wamp.register```, ```Vue.$wamp.call```, ```Vue.$wamp.unsubscribe```, ```Vue.$wamp.unregister```
 
 ```js
 // main.js
-Vue.Wamp.subscribe('some-topic', function(args, kwArgs, details) {
+Vue.$wamp.subscribe('some-topic', function(args, kwArgs, details) {
         // context is empty
         console.log(this); // = null
     }, {
@@ -170,7 +164,7 @@ export default {
 ```
 
 ## Todo
-
-* Tests
-* Improve on src
-* Improve on builder
+ * Example
+ * Tests
+ * Vuex integration
+ * Re-authentication
