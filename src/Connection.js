@@ -15,10 +15,10 @@ function deferredSession(connection, method, args = []) {
   connection.getSession().then((session) => {
     try {
       session[method](...args)
-        .then(d.resolve, d.reject, d.notify)
-        .finally(() => {
-          debounceClose(connection);
-        });
+          .then(d.resolve, d.reject, d.notify)
+          .finally(() => {
+            debounceClose(connection);
+          });
     } catch (e) {
       debounceClose(connection);
       d.reject(e);
