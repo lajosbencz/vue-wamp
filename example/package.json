@@ -18,6 +18,7 @@
     "@vue/cli-plugin-vuex": "^4.1.0",
     "@vue/cli-service": "^4.1.0",
     "express-http-proxy": "^1.6.0",
+    "fox-wamp": "^0.6.9",
     "vue-template-compiler": "^2.6.10"
   }
 }
