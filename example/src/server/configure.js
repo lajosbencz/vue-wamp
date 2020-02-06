@@ -1,4 +1,4 @@
-const FoxRouter = require('fox-wamp');
+// const FoxRouter = require('fox-wamp');
 const autobahn = require('autobahn');
 
 module.exports = (app, server) => {
