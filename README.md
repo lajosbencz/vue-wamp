@@ -12,6 +12,19 @@ Since v2.0.0:
 * Reactive global state
 * Events
 
+Since v3.0.0:
+* ```wampIsOpen```, ```wampIsConnected``` and ```wampIsRetrying``` are only available on the ```$root``` component, to avoid data pollution. (Events are still emitted on all components)
+* Scrapped bundling, use your own toolchain to transpile to the desired compatibility level
+* Deprecated config options:
+  * ```onopen {function}```
+  * ```onclose {function}```
+  * ```debug {boolean}```
+* New config options:
+  * ```namespace {string}```: The namespace for the plugin, default: ```wamp```
+  * ```auto_reestablish {boolean}```: Automatically re-registers and re-subscribes after reconnection
+  * ```auto_close_timeout {number}```: Will close the WS connection after amount of idle seconds
+* Rudimentary TypeScript support 
+
 ## Installation
 
 ```
@@ -40,12 +53,6 @@ Vue.use(VueWamp, {
     debug: true, // Logs will be written to the console
     url: 'ws://demo.crossbar.io/ws',
     realm: 'realm1',
-    onopen: function(session, details) {
-        console.log('WAMP connected', session, details);
-    },
-    onclose: function(reason, details) {
-        console.log('WAMP closed: ' + reason, details);
-    }
 });
 ```
 
@@ -54,8 +61,8 @@ Vue.use(VueWamp, {
 ```vue
 <template>
     <div>
-        <span v-if="wampIsOpen">Connected</span>
-        <span v-else-if="wampIsRetrying">Retrying...</span>
+        <span v-if="$root.wampIsOpen">Connected</span>
+        <span v-else-if="$root.wampIsRetrying">Retrying...</span>
         <span v-else>Disconnected</span>    
     </div>
 </template>
