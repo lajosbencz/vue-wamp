@@ -164,7 +164,7 @@ class Connection extends autobahn.Connection {
    * @param {object} [options]
    * @return {When.Promise}
    */
-  call(procedure, args, kwArgs, options) {
+  call(procedure, args = [], kwArgs = {}, options = {}) {
     return deferredSession(this, 'call', [procedure, args, kwArgs, options]);
   }
 
@@ -174,7 +174,7 @@ class Connection extends autobahn.Connection {
    * @param {object} [options]
    * @return {When.Promise}
    */
-  register(procedure, endpoint, options) {
+  register(procedure, endpoint, options = {}) {
     return deferredSession(this, 'register', [procedure, endpoint, options]);
   }
 
@@ -193,7 +193,7 @@ class Connection extends autobahn.Connection {
    * @param {object} [options]
    * @return {When.Promise}
    */
-  publish(topic, args, kwArgs, options) {
+  publish(topic, args = [], kwArgs = {}, options = {}) {
     options = {
       ...options,
       acknowledge: true,
@@ -207,7 +207,7 @@ class Connection extends autobahn.Connection {
    * @param {object} [options]
    * @return {When.Promise}
    */
-  subscribe(topic, handler, options) {
+  subscribe(topic, handler, options = {}) {
     return deferredSession(this, 'subscribe', [topic, handler, options]);
   }
 
