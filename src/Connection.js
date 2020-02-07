@@ -145,7 +145,7 @@ class Connection extends autobahn.Connection {
       setTimeout(() => this.open());
       return this._wampSessionDefer.promise;
     }
-    if(!this._session.isOpen) {
+    if (!this._session.isOpen) {
       return this._wampSessionDefer.promise;
     }
     return When.Promise.resolve(this._session);
