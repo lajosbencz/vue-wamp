@@ -48,7 +48,7 @@
     "fastify-wamp-router": "^0.4.0"
   },
   "dependencies": {
-    "autobahn": "^20",
+    "autobahn": "^20.2.2",
     "when": "^3.7.8",
     "ws": "^7"
   },
